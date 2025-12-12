@@ -1,35 +1,34 @@
-# Semana 01 – Fundamentos de contenedores y Docker
+# Semana 01 – Fundamentos de Contenedores y Docker
 
 Este módulo introduce los **conceptos esenciales de contenedores** y el **uso básico de Docker**. El enfoque es práctico: instalar (a nivel conceptual) y ejecutar contenedores, comprender su relación con imágenes y registros, y dominar comandos mínimos para operar en la terminal.
 
 ---
 
 ## Objetivos de aprendizaje
-- **Objetivo 1:** Comprender qué es un contenedor y qué problemas resuelve Docker en entornos de desarrollo y despliegue.
-- **Objetivo 2:** Diferenciar contenedores y máquinas virtuales en términos de aislamiento, uso de recursos y portabilidad.
-- **Objetivo 3:** Identificar los componentes principales de Docker (daemon, CLI, imágenes, contenedores, registros) y su rol en el flujo de trabajo.
-- **Objetivo 4:** Ejecutar, inspeccionar y administrar contenedores con comandos esenciales de Docker.
-- **Objetivo 5:** Ejecutar contenedores en modo interactivo y en segundo plano, incluyendo mapeo de puertos.
+- Comprender qué es un contenedor y qué problemas resuelve Docker en entornos de desarrollo y despliegue.
+- Diferenciar contenedores y máquinas virtuales en términos de aislamiento, uso de recursos y portabilidad.
+- Identificar los componentes principales de Docker (daemon, CLI, imágenes, contenedores, registros) y su rol en el flujo de trabajo.
+- Ejecutar, inspeccionar y administrar contenedores con comandos esenciales de Docker.
+- Ejecutar contenedores en modo interactivo y en segundo plano, incluyendo mapeo de puertos.
 
 ---
 
-## Resultados esperados
+## Resultados de aprendizaje
 Al finalizar este módulo, el estudiante será capaz de:
 
-- **Outcome 1:** Explicar, con ejemplos concretos, por qué los contenedores mejoran portabilidad y reproducibilidad frente a instalaciones manuales.
-- **Outcome 2:** Comparar contenedores vs. máquinas virtuales, identificando al menos **tres diferencias** y **dos casos de uso** típicos.
-- **Outcome 3:** Describir la arquitectura básica de Docker (daemon, CLI, imágenes, contenedores, registro) y el flujo **pull → run → stop → remove**.
-- **Outcome 4:** Ejecutar y administrar contenedores usando comandos esenciales (`docker run`, `docker ps`, `docker stop`, `docker rm`, `docker images`, `docker pull`, `docker rmi`).
-- **Outcome 5:** Ejecutar un contenedor en modo interactivo (`-it`) y en modo detached (`-d`) con mapeo de puertos (`-p`), verificando su funcionamiento desde el navegador o terminal.
+- Explicar, con ejemplos concretos, por qué los contenedores mejoran portabilidad y reproducibilidad frente a instalaciones manuales.
+- Comparar contenedores vs. máquinas virtuales, identificando al menos **tres diferencias** y **dos casos de uso** típicos.
+- Describir la arquitectura básica de Docker (daemon, CLI, imágenes, contenedores, registro) y el flujo **pull → run → stop → remove**.
+- Ejecutar y administrar contenedores usando comandos esenciales (`docker run`, `docker ps`, `docker stop`, `docker rm`, `docker images`, `docker pull`, `docker rmi`).
+- Ejecutar un contenedor en modo interactivo (`-it`) y en modo detached (`-d`) con mapeo de puertos (`-p`), verificando su funcionamiento desde el navegador o terminal.
 
 > Nota: Los resultados de aprendizaje están redactados en términos observables y medibles.
 
 ---
 
-## Resumen 
+## Temas de la semana
 
-### 1. Tema central
-**Fundamentos de contenedores y operación básica con Docker.**  
+### 1. Fundamentos de contenedores y operación básica con Docker.
 Se estudia la motivación de Docker y se realizan primeras ejecuciones de contenedores para entender el ciclo de vida completo.
 
 **Conexión con semanas posteriores:**  
