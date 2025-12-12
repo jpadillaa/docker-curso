@@ -1,4 +1,4 @@
-# Semana 01 – Fundamentos de Contenedores y Docker
+# Módulo 01 – Fundamentos de Contenedores y Docker
 
 Este módulo introduce los **conceptos esenciales de contenedores** y el **uso básico de Docker**. El enfoque es práctico: instalar (a nivel conceptual) y ejecutar contenedores, comprender su relación con imágenes y registros, y dominar comandos mínimos para operar en la terminal.
 
@@ -26,12 +26,12 @@ Al finalizar este módulo, el estudiante será capaz de:
 
 ---
 
-## Temas de la semana
+## Temas
 
 ### 1. Fundamentos de contenedores y operación básica con Docker.
 Se estudia la motivación de Docker y se realizan primeras ejecuciones de contenedores para entender el ciclo de vida completo.
 
-**Conexión con semanas posteriores:**  
+**Conexión con módulos posteriores:**  
 Esta base habilita el módulo 2 (construcción de imágenes y `Dockerfile`) y prepara el terreno para redes, volúmenes y orquestación ligera con Compose (módulo 3).
 
 ### 2. Conceptos clave
@@ -53,8 +53,8 @@ Esta base habilita el módulo 2 (construcción de imágenes y `Dockerfile`) y pr
   - Uso básico de terminal en Linux: navegación, permisos, ejecución de comandos.
   - Conceptos mínimos de red: puertos, localhost, cliente/servidor.
 - **Conexión con contenidos previos del curso:**
-  - Si el curso parte de Linux básico, esta semana aprovecha esa base para introducir herramientas de empaquetamiento y ejecución.
-- **Cómo prepara para las siguientes semanas:**
+  - Si el curso parte de Linux básico, este módulo aprovecha esa base para introducir herramientas de empaquetamiento y ejecución.
+- **Cómo prepara para los siguientes módulos:**
   - Dominar el ciclo `pull/run/stop/rm` y la noción de imágenes es requisito directo para **construir imágenes** con `Dockerfile` (módulo 2) y operar ambientes multi-servicio (módulo 3).
 
 ---
@@ -75,7 +75,7 @@ Esta base habilita el módulo 2 (construcción de imágenes y `Dockerfile`) y pr
 
 ---
 
-## Evaluaciones de la semana
+## Evaluaciones
 
 ### Quiz (conceptos básicos)
 - Contenedores y motivación de Docker.
