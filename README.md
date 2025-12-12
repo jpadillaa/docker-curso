@@ -43,3 +43,16 @@ Al finalizar satisfactoriamente este módulo, el estudiante estará en capacidad
 
 > [!TIP]
 > El proyecto asegura la operatividad y mantenibilidad del sistema, simulando un escenario del mundo real.
+
+---
+
+## Módulos
+
+| Semana | Título del módulo | Foco principal | Actividades evaluadas |
+|:-----:|-------------------|----------------|------------------------|
+| **1** | Fundamentos de contenedores y Docker | Conceptos, instalación, primeros comandos | Laboratorio guiado de comandos de Docker|
+| **2** | Imágenes y Dockerfile | Construcción de imágenes, capas, tags | Laboratorio de Dockerfile |
+| **3** | Volúmenes, redes y Docker Compose | Persistencia, redes, multi-servicio | Laboratorio mini-proyecto con Docker Compose |
+| **4** | Buenas prácticas con Docker | Optimización, organización, observabilidad básica | Laboratorio de refactorización |
+| **5** | Seguridad en contenedores | Principios de seguridad | Proyecto |
+
