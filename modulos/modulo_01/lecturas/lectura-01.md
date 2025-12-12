@@ -13,9 +13,9 @@ El desarrollo de software enfrenta desafíos recurrentes asociados con la **gest
 
 Durante años, las **máquinas virtuales (VMs)** mitigaron parte del problema al encapsular un **sistema operativo completo** junto con la aplicación. Sin embargo, esta aproximación introduce costos relevantes:
 
-- **Overhead significativo**: (duplicación de SO)
-- **Mayor consumo**: de memoria y almacenamiento
-- **Complejidad operacional**: que puede limitar velocidad y eficiencia en despliegues modernos
+- **Overhead significativo**: duplicación del sistema operativo
+- **Mayor consumo**: requiere más memoria y almacenamiento
+- **Complejidad operacional**: puede limitar velocidad y eficiencia en despliegues modernos
 
 > [!WARNING]
 > La virtualización completa suele ser efectiva, pero puede ser ineficiente cuando se requiere **escalar rápidamente** o desplegar con alta frecuencia.
@@ -45,7 +45,7 @@ Un servicio web que funciona localmente puede fallar en producción si allí exi
 - variables de entorno faltantes
 
 Al **contenerizar** el servicio, se define explícitamente la base de ejecución y sus dependencias, reduciendo la variabilidad entre ambientes.
-> [!IMPORTANT]
+> [!IMPORTANTE]
 > Esta arquitectura compartida de los contenedores tiene implicaciones directas en **eficiencia**, **velocidad** y **portabilidad**.
 
 ---
