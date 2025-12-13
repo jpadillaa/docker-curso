@@ -1,6 +1,8 @@
 # Lectura 1 - Motivación: ¿por qué contenedores?
 
-El desarrollo de software enfrenta desafíos recurrentes asociados con la **gestión de dependencias**, la **portabilidad entre entornos** y la **eficiencia en el uso de recursos computacionales**. La frase **“funciona en mi máquina”** refleja una situación frecuente: una aplicación opera correctamente en desarrollo, pero falla en pruebas o producción por diferencias sutiles en:
+El desarrollo de software enfrenta desafíos recurrentes asociados con la **gestión de dependencias**, la **portabilidad entre entornos** y la **eficiencia en el uso de recursos computacionales**. La frase **“funciona en mi máquina”** refleja una situación frecuente, una aplicación opera correctamente en desarrollo, pero falla en pruebas o producción por diferencias sutiles en:
+
+<img src="../assets/diagrama1.png" alt="una aplicación opera correctamente en desarrollo, pero falla en pruebas o producción" width="800">
 
 - versiones de bibliotecas
 - variables de entorno
