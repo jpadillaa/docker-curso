@@ -45,7 +45,7 @@ Un servicio web que funciona localmente puede fallar en producción si allí exi
 - variables de entorno faltantes
 
 Al **contenerizar** el servicio, se define explícitamente la base de ejecución y sus dependencias, reduciendo la variabilidad entre ambientes.
-> [!IMPORTANTE]
+> [!IMPORTANT]
 > Esta arquitectura compartida de los contenedores tiene implicaciones directas en **eficiencia**, **velocidad** y **portabilidad**.
 
 ---
