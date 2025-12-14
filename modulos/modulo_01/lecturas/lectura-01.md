@@ -9,8 +9,6 @@ El desarrollo de software enfrenta desafíos recurrentes asociados con la **gest
 - configuración del sistema
 - servicios auxiliares
 
----
-
 ## Máquinas virtuales: mitigación con overhead
 
 Durante años, las **máquinas virtuales (VMs)** mitigaron parte del problema al encapsular un **sistema operativo completo** junto con la aplicación. Sin embargo, esta aproximación introduce costos relevantes:
@@ -21,8 +19,6 @@ Durante años, las **máquinas virtuales (VMs)** mitigaron parte del problema al
 
 > [!WARNING]
 > La virtualización completa suele ser efectiva, pero puede ser ineficiente cuando se requiere **escalar rápidamente** o desplegar con alta frecuencia.
-
----
 
 ## Contenedores: portabilidad con menor overhead
 
@@ -50,7 +46,6 @@ Al **contenerizar** el servicio, se define explícitamente la base de ejecución
 > [!IMPORTANT]
 > Esta arquitectura compartida de los contenedores tiene implicaciones directas en **eficiencia**, **velocidad** y **portabilidad**.
 
----
 ## Implicaciones de la arquitectura compartida de los contenedores
 
 ### Eficiencia de recursos
@@ -62,8 +57,6 @@ Al eliminar la necesidad de un **sistema operativo invitado** por cada instancia
 > [!TIP]
 > En el mismo hardware, es común ejecutar **muchos más contenedores** que VMs, gracias al menor overhead.
 
----
-
 ### Velocidad de arranque
 Dado que no existe una secuencia de arranque del kernel, un contenedor puede iniciarse en **milisegundos**.
 
@@ -73,8 +66,6 @@ Desde la perspectiva del kernel, iniciar un contenedor es análogo a iniciar un 
 
 > [!NOTE]
 > Esta característica resulta especialmente valiosa en escenarios de **autoscaling**, despliegues frecuentes y entornos efímeros.
-
----
 
 ### Portabilidad
 Un contenedor empaqueta no solo el **código** de la aplicación, sino también sus **dependencias exactas**, por ejemplo:
@@ -88,7 +79,6 @@ Un contenedor empaqueta no solo el **código** de la aplicación, sino también 
 
 Esto contribuye a que lo que se ejecuta en el portátil del desarrollador sea **idéntico** a lo que se ejecuta en producción, con alta consistencia entre entornos.
 
----
 ## ¿Cómo logran aislamiento los contenedores?
 
 Los contenedores logran aislamiento principalmente mediante primitivas del **kernel Linux**:
@@ -102,8 +92,6 @@ Los contenedores logran aislamiento principalmente mediante primitivas del **ker
 > [!CAUTION]
 > En producción, la seguridad suele reforzarse con configuraciones adicionales (p. ej., **restricciones de capacidades del kernel** y **perfiles de seguridad**) según las políticas de la organización.
 
----
-
 ## Implicaciones arquitectónicas y prácticas modernas
 
 La contenedorización favorece principios relevantes en ingeniería de software moderna:
@@ -116,8 +104,6 @@ La contenedorización favorece principios relevantes en ingeniería de software 
 > [!NOTE]
 > Los contenedores habilitan (sin imponer) patrones como **microservicios**, pero también son útiles en **monolitos** cuando se busca estandarizar ambientes y despliegues.
 
----
-
 ## Nota sobre el ecosistema de contenedores
 
 Docker hace parte de un ecosistema más amplio en evolución. Existen alternativas y componentes especializados, como:
@@ -127,8 +113,6 @@ Docker hace parte de un ecosistema más amplio en evolución. Existen alternativ
 - `Podman`
 
 Estos pueden estar optimizados para distintos contextos (p. ej., integración con orquestadores o enfoques sin *daemon*). En este curso, el foco estará en **Docker** por su valor pedagógico y utilidad práctica como puerta de entrada; las alternativas se proponen como material complementario para profundización posterior.
-
----
 
 ## Preguntas de autoevaluación
 
