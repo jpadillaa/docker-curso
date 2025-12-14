@@ -104,7 +104,7 @@ La contenedorización favorece principios relevantes en ingeniería de software 
 > [!NOTE]
 > Los contenedores habilitan (sin imponer) patrones como **microservicios**, pero también son útiles en **monolitos** cuando se busca estandarizar ambientes y despliegues.
 
-## Nota sobre el ecosistema de contenedores
+## Ecosistema de contenedores
 
 Docker hace parte de un ecosistema más amplio en evolución. Existen alternativas y componentes especializados, como:
 
