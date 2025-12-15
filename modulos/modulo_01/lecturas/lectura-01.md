@@ -11,6 +11,9 @@ El desarrollo de software enfrenta desafíos recurrentes asociados con la **gest
 
 ## Máquinas virtuales: mitigación con overhead
 
+
+<img src="../assets/diagrama2.png" alt="VMs mitigación con overhead" width="640">
+
 Durante años, las **máquinas virtuales (VMs)** mitigaron parte del problema al encapsular un **sistema operativo completo** junto con la aplicación. Sin embargo, esta aproximación introduce costos relevantes:
 
 - **Overhead significativo**: duplicación del sistema operativo
