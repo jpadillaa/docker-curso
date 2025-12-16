@@ -29,7 +29,7 @@ Si Docker puede ejecutar un videojuego clásico de los años 90 en tu navegador,
 Abra su terminal y ejecute:
 
 ```bash
-docker run --rm -p 8080:8080 b0nam/docker-doom
+docker run --rm -p 8000:8000 elliottking/doom-wasm:0.1.1
 ```
 
 ### Acceso
@@ -37,7 +37,7 @@ docker run --rm -p 8080:8080 b0nam/docker-doom
 Abra su navegador y visite:
 
 ```
-http://localhost:8080
+http://localhost:8000
 ```
 
 ### Controles del juego
@@ -45,16 +45,14 @@ http://localhost:8080
 | Tecla | Acción |
 |-------|--------|
 | `↑ ↓ ← →` | Movimiento |
-| `Ctrl` | Disparar |
-| `Espacio` | Abrir puertas |
+| `Click izquierdo` | Disparar |
+| `Click derecho` | Abrir puertas |
 | `Esc` | Menú/Pausa |
 
 ### ¿Qué acaba de lograr?
 
 Sin instalar nada más que Docker, acaba de ejecutar:
 - Un sistema operativo Linux
-- Un servidor VNC
-- Un emulador de DOS
 - El videojuego DOOM completo
 
 **Todo en un solo comando.**
@@ -212,7 +210,7 @@ Para eliminar las imágenes descargadas:
 docker images
 
 # Eliminar imágenes específicas
-docker rmi b0nam/docker-doom
+docker rmi elliottking/doom-wasm
 docker rmi lscr.io/linuxserver/code-server
 docker rmi quay.io/jupyter/scipy-notebook
 
@@ -225,6 +223,6 @@ docker image prune -a
 | Recurso | Enlace |
 |---------|--------|
 | Docker Hub | [hub.docker.com](https://hub.docker.com) |
-| Imagen DOOM | [github.com/B0nam/DOCKER-DOOM](https://github.com/B0nam/DOCKER-DOOM) |
+| Imagen DOOM | [https://hub.docker.com/r/elliottking/doom-wasm](https://hub.docker.com/r/elliottking/doom-wasm) |
 | LinuxServer Code-Server | [docs.linuxserver.io/images/docker-code-server](https://docs.linuxserver.io/images/docker-code-server/) |
 | Jupyter Docker Stacks | [github.com/jupyter/docker-stacks](https://github.com/jupyter/docker-stacks) |
