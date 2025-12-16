@@ -127,3 +127,14 @@ Gracias a estas especificaciones, una imagen construida con una herramienta pued
 ### Conexión con la motivación original
 
 El costo de “empaquetar un sistema operativo completo por carga” en VMs motivó enfoques más livianos. Los contenedores reducen significativamente esa sobrecarga al virtualizar a nivel de sistema operativo, manteniendo portabilidad y repetibilidad del entorno con tiempos de arranque más cercanos a los de procesos nativos.
+
+## Preguntas de autoevaluación
+
+1. Considerando que el rendimiento y la rapidez de los contenedores provienen de ejecutarse como procesos aislados sobre un kernel compartido, ¿qué decisiones de diseño (builder, runtime, rootless, seccomp/AppArmor/SELinux, red, filesystem por capas) tomaría para equilibrar **portabilidad**, **seguridad** y **desempeño** en un despliegue real, y cuáles serían sus criterios para justificar esos trade-offs?
+
+## Referencias
+
+- Tanenbaum, A., & Bos, H. *Modern Operating Systems* (4th ed.). Pearson. (Capítulo: Virtualization).
+- Tankersley, C. *Docker for Developers*. Leanpub Publishing.
+- Raj, P., & Sing, V. *Learning Docker*. Packt Publishing.
+
