@@ -2,6 +2,8 @@
 
 Un contenedor responde a la misma necesidad de **encapsular una aplicación** y su entorno de ejecución, pero lo hace con una estructura más ligera que una máquina virtual (VM). En lugar de empaquetar un **sistema operativo completo**, un contenedor incluye la **aplicación**, sus **dependencias** y las **bibliotecas** necesarias para ejecutarse. En este modelo, la virtualización ocurre a nivel de **sistema operativo**: los contenedores **comparten el kernel** del sistema operativo anfitrión, y se diferencian entre sí por mecanismos de aislamiento y control de recursos.
 
+<img src="../assets/diagrama7.png" alt="VMs vs Contenedores" width="640">
+
 > **Idea clave:** un contenedor es, en esencia, un **conjunto de procesos aislados** que comparten el kernel del host.
 
 ## Contenedores de aplicación vs contenedores de sistema
@@ -15,6 +17,10 @@ Es importante distinguir dos enfoques:
 > **Regla práctica:** para aplicaciones modernas (microservicios, CI/CD, despliegues cloud), el estándar es el **contenedor de aplicación**.
 
 ## Por qué son más ligeros y rápidos
+
+<a href="https://www.youtube.com/watch?v=a1LW8rDB874">
+  <img src="https://img.youtube.com/vi/a1LW8rDB874/hqdefault.jpg" alt="Ver video en YouTube" width="480">
+</a>
 
 Los contenedores suelen ser **rápidos de crear e iniciar** porque no requieren arrancar un kernel ni un sistema operativo invitado. Su ciclo de vida se parece al de procesos nativos del sistema operativo, ya que **son procesos** con aislamiento adicional.
 
@@ -76,16 +82,12 @@ Podman y su ecosistema suelen destacarse por:
 
 **Uso típico:** entornos que priorizan seguridad, administración alineada con prácticas Linux, y workflows flexibles.
 
----
-
 ### containerd como runtime en Kubernetes
 
 **containerd** es un runtime ampliamente utilizado en entornos Kubernetes y puede operar de forma independiente del stack “Docker” como experiencia de usuario.
 
 - Facilita integrar herramientas de construcción (por ejemplo, BuildKit) con la ejecución en Kubernetes.
 - Favorece portabilidad al mantener una separación clara entre “construir” y “ejecutar”.
-
----
 
 ### LXC, LXD e Incus
 
@@ -96,8 +98,6 @@ Este grupo se asocia principalmente con **contenedores de sistema**:
 - **Incus:** fork comunitario asociado a la continuidad del enfoque de LXD, con énfasis en compatibilidad y migración en ciertos escenarios.
 
 **Uso típico:** laboratorios, entornos donde se requiere administrar “sistemas” aislados con experiencia cercana a una VM, y ciertos casos de multi-servicio dentro de un mismo entorno.
-
----
 
 ## Contenedores en Windows
 
@@ -115,8 +115,6 @@ Microsoft introdujo soporte para contenedores en Windows Server 2016 y desde ent
 - Mantienen una experiencia de uso similar a contenedores, pero con **mayor aislamiento**.
 - Son útiles en escenarios multitenant o con requerimientos de seguridad más estrictos.
 
----
-
 ## Interoperabilidad: Open Container Initiative (OCI)
 
 La interoperabilidad en el ecosistema de contenedores es posible gracias a la **Open Container Initiative (OCI)**, patrocinada por la Linux Foundation. OCI define especificaciones estándar para:
@@ -125,8 +123,6 @@ La interoperabilidad en el ecosistema de contenedores es posible gracias a la **
 - y el **runtime** (Runtime Specification).
 
 Gracias a estas especificaciones, una imagen construida con una herramienta puede ser ejecutada por distintos runtimes compatibles (por ejemplo, mediante **containerd** u otros runtimes OCI). Un ejemplo de runtime de bajo nivel que implementa estas especificaciones es **runc**.
-
----
 
 ### Conexión con la motivación original
 
