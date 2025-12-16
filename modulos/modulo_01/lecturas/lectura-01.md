@@ -121,3 +121,9 @@ Estos pueden estar optimizados para distintos contextos (p. ej., integración co
 
 1. ¿Qué diferencias explican el mayor consumo de recursos de una **VM** frente a un **contenedor**?
 2. En un despliegue típico, ¿qué elementos debería definir explícitamente para reducir el problema de **“funciona en mi máquina”**?
+
+## Referencias
+
+- Tanenbaum, A., & Bos, H. *Modern Operating Systems* (4th ed.). Pearson. (Capítulo: Virtualization).
+- Tankersley, C. *Docker for Developers*. Leanpub Publishing.
+- Raj, P., & Sing, V. *Learning Docker*. Packt Publishing.
