@@ -108,7 +108,7 @@ Cada contenedor suele tener su propia interfaz y configuración de red virtual, 
 
 ## Aislamiento en Linux (lo que realmente “hace” el contenedor)
 
-El aislamiento se implementa con capacidades del kernel, principalmente:
+En este contexto, **aislamiento** significa que el sistema operativo crea la ilusión de que un conjunto de procesos “vive” en su propio entorno: ve **su propio árbol de procesos**, **sus interfaces de red**, **sus puntos de montaje** y otros recursos, como si no compartiera el host con otras cargas. En realidad, todos esos procesos siguen ejecutándose sobre el **mismo kernel**, pero con **fronteras lógicas** que limitan lo que pueden **ver**, **usar** y, en ciertos casos, **afectar**. El aislamiento se implementa con capacidades del kernel, principalmente:
 
 - **Namespaces:** aíslan recursos como:
   - **PID** (procesos)
@@ -139,6 +139,8 @@ Los **registros de imágenes** almacenan y distribuyen imágenes (típicamente e
 > **Buenas prácticas:** versionar con tags claros y fijar *deploys* críticos por **digest** cuando se requiera máxima trazabilidad.
 
 ## Seguridad mínima recomendada (Docker en producción)
+
+En producción, el objetivo es **reducir la superficie de ataque** y **limitar el impacto** de un contenedor comprometido, aplicando el principio de **mínimo privilegio**.
 
 - Evite ejecutar procesos como **root** cuando sea posible (por ejemplo, flujos **rootless** y buenas prácticas de Dockerfile).
 - Reduzca privilegios: use capacidades Linux mínimas y evite `--privileged` salvo necesidad justificada.
