@@ -12,7 +12,7 @@ Antes del contenedor marítimo, la carga se movía como piezas heterogéneas: le
 
 De manera similar, Docker estandariza la unidad de despliegue: el **contenedor**. El motor ejecuta esa unidad en cualquier sistema compatible, basándose en un estándar (OCI), sin depender de cómo fue construida internamente la aplicación.
 
-## Arquitectura de Docker Engine (visión práctica)
+## Arquitectura de Docker Engine
 
 Docker se compone de varios elementos que colaboran para construir y ejecutar contenedores:
 
