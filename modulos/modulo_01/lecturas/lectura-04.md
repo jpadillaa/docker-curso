@@ -4,7 +4,7 @@ Docker es una plataforma *open source* que estandariza el **empaquetado**, la **
 
 > **Idea clave:** Docker no “empaqueta un sistema operativo completo”; empaqueta un **filesystem** y **metadatos** para ejecutar procesos aislados sobre el **kernel del host** (o sobre una VM liviana en ciertos casos, como Hyper-V Containers).
 
-## Analogía: contenedor marítimo (estandarización)
+## El contenedor marítimo: Analogía & estandarización
 
 Antes del contenedor marítimo, la carga se movía como piezas heterogéneas: lento, costoso y propenso a errores. El contenedor estandariza *la unidad de transporte*; un operario de grúa no necesita conocer el contenido para moverlo eficientemente.
 
