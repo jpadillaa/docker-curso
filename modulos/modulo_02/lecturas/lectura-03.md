@@ -629,5 +629,3 @@ CMD ["node", "server.js"]
 - [Best practices para Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 - [BuildKit](https://docs.docker.com/build/buildkit/)
 - [Docker image optimization](https://docs.docker.com/develop/dev-best-practices/)
-- [.dockerignore file](https://docs.docker.com/engine/reference/builder/#dockerignore-file)
-
