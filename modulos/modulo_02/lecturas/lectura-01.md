@@ -1,30 +1,8 @@
-# Tutorial de Comandos Básicos de Docker
-
-## Tabla de Contenidos
-
-- [Introducción](#introducción)
-- [Gestión de Imágenes](#gestión-de-imágenes)
-  - [Comando pull](#comando-pull)
-  - [Comando images](#comando-images)
-  - [Comando rmi](#comando-rmi)
-- [Gestión de Contenedores](#gestión-de-contenedores)
-  - [Comando run](#comando-run)
-  - [Comando ps](#comando-ps)
-  - [Comando stop](#comando-stop)
-  - [Comando rm](#comando-rm)
-- [Ejecución de Comandos](#ejecución-de-comandos)
-  - [Comandos al iniciar un contenedor](#comandos-al-iniciar-un-contenedor)
-  - [Comando exec](#comando-exec)
-- [Modos de Ejecución](#modos-de-ejecución)
-  - [Modo Attach y Detach](#modo-attach-y-detach)
-  - [Modo Interactivo](#modo-interactivo)
-- [Limpieza del Sistema](#limpieza-del-sistema)
-- [Demostración Práctica](#demostración-práctica)
-- [Referencias](#referencias)
+# Lectura 2 - Comandos Básicos de Docker
 
 ## Introducción
 
-En este tutorial se exploran los comandos básicos de Docker, enfocándose en la descarga de imágenes y la gestión de contenedores (instanciar, detener, eliminar).
+En esta lectura se exploran los comandos básicos de Docker, enfocándose en la descarga de imágenes y la gestión de contenedores (instanciar, detener, eliminar).
 
 Se asume una instalación estándar de Docker. En distribuciones GNU/Linux como Ubuntu o Debian, si su usuario no tiene permisos directos, deberá anteponer `sudo` a cada comando. Este paso generalmente no es necesario si opera como usuario root o en otros sistemas operativos.
 
