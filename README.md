@@ -2,12 +2,7 @@
 
 Este curso introduce **Docker** desde cero para personas con bases en Linux y Bash, pero sin experiencia previa en contenedores. Aprenderá a crear y ejecutar contenedores, construir imágenes con `Dockerfile`, gestionar redes y volúmenes, automatizar entornos con **Docker Compose** y aplicar buenas prácticas de construcción y operación. 
 
----
-
 ## Requisitos Previos
-
-> [!IMPORTANT]
-> Para aprovechar este curso al máximo, asegúrase de cumplir con los siguientes requisitos:
 
 > **IMPORTANTE:** Para aprovechar este curso al máximo, asegúrese de cumplir con los siguientes requisitos:
 
@@ -15,11 +10,9 @@ Este curso introduce **Docker** desde cero para personas con bases en Linux y Ba
 * **Fundamentos de redes:** Comprensión del modelo OSI, protocolos TCP/IP, puertos y arquitectura cliente-servidor.
 * **Git:** Nociones básicas de control de versiones.
 
----
-
 ## Resultados de aprendizaje
 
-Al finalizar satisfactoriamente este curso, el estudiante estará en capacidad de:
+Al finalizar satisfactoriamente este material, el estudiante estará en capacidad de:
 
 1.  Diferenciar las arquitecturas de virtualización de hardware vs. virtualización a nivel de sistema operativo, analizando el impacto en el *rendimiento* y la asignación de recursos.
 
@@ -43,10 +36,7 @@ Al finalizar satisfactoriamente este curso, el estudiante estará en capacidad d
     * Caché
     * Proxy Inverso
 
-> [!TIP]
-> El proyecto asegura la operatividad y mantenibilidad del sistema, simulando un escenario del mundo real.
-
----
+> **TIP:** El proyecto asegura la operatividad y mantenibilidad del sistema, simulando un escenario del mundo real.
 
 ## Módulos
 
