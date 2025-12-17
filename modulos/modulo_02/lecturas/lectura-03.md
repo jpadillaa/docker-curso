@@ -774,7 +774,7 @@ FROM scratch             # ~5-10 MB
 
 #### 1. Multi-stage builds
 
-Ya visto anteriormente - reduce tamaño al 90-95%.
+Se estudiará en detalle posteriormente; reduce tamaño al 90-95%.
 
 #### 2. Usar Alpine Linux
 
