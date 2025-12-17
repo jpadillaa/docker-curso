@@ -10,8 +10,6 @@ Este curso introduce **Docker** desde cero para personas con bases en Linux y Ba
 > Para aprovechar este curso al máximo, asegúrase de cumplir con los siguientes requisitos:
 
 > **IMPORTANTE:** Para aprovechar este curso al máximo, asegúrese de cumplir con los siguientes requisitos:
-{: .callout .callout-important }
-
 
 * **Linux CLI:** Conocimiento básico operativo de la interfaz de línea de comandos (gestión de procesos, permisos y sistemas de archivos).
 * **Fundamentos de redes:** Comprensión del modelo OSI, protocolos TCP/IP, puertos y arquitectura cliente-servidor.
