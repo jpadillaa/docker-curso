@@ -575,24 +575,7 @@ docker run -d \
 ```bash
 echo ".env" >> .gitignore
 ```
-
-#### 2. Usando Docker Secrets (Docker Swarm)
-
-Para entornos en producción con Docker Swarm:
-
-```bash
-# Crear un secret
-echo "mi_contraseña_segura" | docker secret create postgres_password -
-
-# Usar en un servicio
-docker service create \
-  --name postgres \
-  --secret postgres_password \
-  -e POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password \
-  postgres:17.5
-```
-
-#### 3. Usando variables de entorno del sistema
+#### 2. Usando variables de entorno del sistema
 
 ```bash
 # Establecer la variable en el sistema
