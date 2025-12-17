@@ -2,16 +2,12 @@
 
 Este módulo introduce los **conceptos esenciales de contenedores** y el **uso básico de Docker**. El enfoque es práctico: instalar (a nivel conceptual) y ejecutar contenedores, comprender su relación con imágenes y registros, y dominar comandos mínimos para operar en la terminal.
 
----
-
 ## Objetivos de aprendizaje
 - Comprender qué es un contenedor y qué problemas resuelve Docker en entornos de desarrollo y despliegue.
 - Diferenciar contenedores y máquinas virtuales en términos de aislamiento, uso de recursos y portabilidad.
 - Identificar los componentes principales de Docker (daemon, CLI, imágenes, contenedores, registros) y su rol en el flujo de trabajo.
 - Ejecutar, inspeccionar y administrar contenedores con comandos esenciales de Docker.
 - Ejecutar contenedores en modo interactivo y en segundo plano, incluyendo mapeo de puertos.
-
----
 
 ## Resultados de aprendizaje
 Al finalizar este módulo, el estudiante será capaz de:
@@ -23,8 +19,6 @@ Al finalizar este módulo, el estudiante será capaz de:
 - Ejecutar un contenedor en modo interactivo (`-it`) y en modo detached (`-d`) con mapeo de puertos (`-p`), verificando su funcionamiento desde el navegador o terminal.
 
 > Nota: Los resultados de aprendizaje están redactados en términos observables y medibles.
-
----
 
 ## Temas
 
@@ -46,8 +40,6 @@ Esta base habilita el módulo 2 (construcción de imágenes y `Dockerfile`) y pr
 2. **Demostración guiada:** Arquitectura de Docker y comandos iniciales (`docker version`, `docker info`).  
 3. **Laboratorio guiado:** Ejecutar un servicio web simple en contenedor (Nginx), mapear puertos, verificar acceso, y limpiar recursos.
 
----
-
 ## Requisitos
 - **Conocimientos recomendados:**
   - Uso básico de terminal en Linux: navegación, permisos, ejecución de comandos.
@@ -57,23 +49,17 @@ Esta base habilita el módulo 2 (construcción de imágenes y `Dockerfile`) y pr
 - **Cómo prepara para los siguientes módulos:**
   - Dominar el ciclo `pull/run/stop/rm` y la noción de imágenes es requisito directo para **construir imágenes** con `Dockerfile` (módulo 2) y operar ambientes multi-servicio (módulo 3).
 
----
-
 ## Criterios generales de evaluación
 - **Criterio 1:** El estudiante explica correctamente (sin ambigüedades) qué es un contenedor y por qué se usa Docker en escenarios reales.
 - **Criterio 2:** Ejecuta contenedores con comandos sencillos y demuestra control del ciclo de vida (listar, detener, eliminar).
 - **Criterio 3:** Realiza una ejecución funcional de un contenedor en modo detached con mapeo de puertos, validando que el servicio responde.
 - **Criterio 4:** Gestiona imágenes a nivel básico (descargar, listar y eliminar cuando aplique) y reconoce el rol de Docker Hub/registro.
 
----
-
 ## Notas para el profesor
 - Mantener la instalación como **conceptual**: referenciar guías oficiales y advertir sobre diferencias por distribución (Ubuntu/Debian vs Fedora/CentOS).
 - Enfatizar desde el inicio el hábito de **limpieza**: detener/eliminar contenedores y, si aplica, remover imágenes para evitar consumo de disco.
 - Recomendación: usar Nginx por ser un ejemplo visible (navegador) y reforzar el concepto de **mapeo de puertos**.
 - Variación si el entorno tiene restricciones.
-
----
 
 ## Evaluaciones
 
