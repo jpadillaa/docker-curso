@@ -1,5 +1,7 @@
 # Tutorial 01 - Instalación de Docker
 
+> **Objetivo:** Correcta instalación y verificación de Docker, asegurando que el entorno quede listo para ejecutar contenedores y desplegar aplicaciones completas con un solo comando.
+
 Mantener actualizada la documentación de instalación de Docker en Linux es complejo, porque los pasos cambian con las distribuciones (y sus codenames), con el manejo de llaves/repositorios y con actualizaciones del sistema. Por esta razón, esta sección mantiene el procedimiento alineado con la **última versión de Ubuntu soportada por Docker** y, para otras distribuciones, remite a la documentación oficial correspondiente.
 
 ## Instalación de Docker Engine en Ubuntu (repositorio oficial)
