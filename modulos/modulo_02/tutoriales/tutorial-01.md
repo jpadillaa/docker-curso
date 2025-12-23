@@ -1,5 +1,7 @@
 # Tutorial 01: Ejecución de contenedores Docker
 
+> **Objetivo:**  Ejecutar contenedores Docker de forma correcta y reproducible, controlando puertos, volúmenes y variables de entorno para desplegar aplicaciones completas con un solo comando.
+
 ## Prerequisitos
 
 Antes de comenzar, asegúrese de cumplir con los siguientes requisitos:
