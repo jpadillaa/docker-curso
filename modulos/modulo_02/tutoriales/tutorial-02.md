@@ -1,5 +1,7 @@
 # Tutorial 02 - Contenerización de GroceryListApp con Docker
 
+> **Objetivo:** Contenerizar una aplicación creando un Dockerfile correcto y mantenible, definiendo imagen base, dependencias, copiado de código, configuración de ejecución y exposición de puertos para generar una imagen lista para despliegue.
+
 ## Prerequisitos
 
 Antes de comenzar, asegúrese de cumplir con los siguientes requisitos:
