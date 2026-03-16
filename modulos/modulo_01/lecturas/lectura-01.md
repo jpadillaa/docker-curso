@@ -63,9 +63,7 @@ Al eliminar la necesidad de un **sistema operativo invitado** por cada instancia
 ### Velocidad de arranque
 Dado que no existe una secuencia de arranque del kernel, un contenedor puede iniciarse en **milisegundos**.
 
-Desde la perspectiva del kernel, iniciar un contenedor es análogo a iniciar un **proceso convencional**, pero con:
-
-- parámetros de aislamiento adicionales
+Desde la perspectiva del kernel, iniciar un contenedor es análogo a iniciar un **proceso convencional**, pero con **parámetros de aislamiento adicionales**.
 
 > [!NOTE]
 > Esta característica resulta especialmente valiosa en escenarios de **autoscaling**, despliegues frecuentes y entornos efímeros.
