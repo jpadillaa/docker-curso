@@ -1,5 +1,21 @@
 # Lectura 2 — Virtualización
 
+**Conceptos básicos**
+
+Antes de avanzar, conviene precisar cuatro conceptos fundamentales.
+
+- **Host**  
+  Es la máquina física sobre la cual se ejecuta la virtualización. Aporta los recursos reales de hardware, como CPU, memoria, almacenamiento y red.
+
+- **Guest OS**  
+  Es el sistema operativo invitado que corre dentro de una máquina virtual. Desde su perspectiva, funciona como si estuviera instalado en una máquina propia, aunque en realidad comparte el hardware físico del host con otras instancias.
+
+- **Hipervisor**  
+  Es la capa de software que permite crear, ejecutar y administrar máquinas virtuales. Su función principal es abstraer el hardware físico y asignar recursos de manera controlada a cada VM, manteniendo aislamiento entre ellas.
+
+- **Máquina virtual**  
+  Es una instancia computacional aislada que emula un computador completo. Incluye hardware virtualizado, un sistema operativo invitado y las aplicaciones que se ejecutan sobre él.
+
 Para comprender las tecnologías de contenedorización, conviene iniciar por los fundamentos de la virtualización, que surgió como respuesta a la **subutilización de recursos** en servidores físicos. En muchos entornos, una aplicación rara vez aprovecha por completo la capacidad de procesamiento, memoria y almacenamiento disponibles, lo que genera ineficiencia y costos innecesarios.
 
 ## Enfoque tradicional
