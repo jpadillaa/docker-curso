@@ -32,7 +32,7 @@ En un enfoque tradicional
 
 La virtualización desacopla el software del hardware mediante una capa llamada **hipervisor**. Esta capa permite crear y administrar **máquinas virtuales (VMs)**, cada una ejecutando su propio **sistema operativo invitado (Guest OS)**, con su respectivo entorno de ejecución y dependencias.
 
-<img src="../assets/diagrama4.png" alt="Hipervisor y máquinas virtuales" width="480">
+<img src="../assets/diagrama4.jpg" alt="Hipervisor y máquinas virtuales" width="480">
 
 En términos conceptuales, la virtualización permite ejecutar múltiples sistemas operativos y cargas de trabajo aisladas sobre el mismo hardware físico, compartiendo recursos de manera controlada.
 
