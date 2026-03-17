@@ -49,10 +49,6 @@ Es importante distinguir dos enfoques.
 
 ## Por qué son más ligeros y rápidos
 
-<a href="https://www.youtube.com/watch?v=a1LW8rDB874">
-  <img src="https://img.youtube.com/vi/a1LW8rDB874/hqdefault.jpg" alt="Ver video en YouTube" width="480">
-</a>
-
 Los contenedores suelen ser **rápidos de crear e iniciar** porque no necesitan arrancar un kernel ni un sistema operativo invitado. Su ciclo de vida se parece más al de procesos del sistema operativo.
 
 Esa ligereza se explica porque
