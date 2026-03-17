@@ -1,6 +1,6 @@
 # Lectura 4 — Docker
 
-Docker es una plataforma open source que estandariza el **empaquetado**, la **distribución** y la **ejecución** de aplicaciones mediante **contenedores**. Su propósito es permitir que una misma aplicación se ejecute de forma consistente entre entornos (desarrollo, pruebas, producción), mitigando el problema clásico de **"en mi máquina funciona"** al encapsular el software con sus dependencias y configuración necesaria.
+Docker es una plataforma open source que estandariza el empaquetado, la distribución y la ejecución de aplicaciones mediante contenedores. Su propósito es permitir que una misma aplicación se ejecute de forma consistente entre entornos (desarrollo, pruebas, producción), mitigando el problema clásico de **"en mi máquina funciona"** al encapsular el software con sus dependencias y configuración necesaria.
 
 > **Distinción importante:** Docker no es sinónimo de contenedor. Docker es una herramienta y un ecosistema; el **contenedor** es la unidad de ejecución. Otros entornos y runtimes también pueden crear y ejecutar contenedores siguiendo los mismos estándares.
 
@@ -39,7 +39,7 @@ Docker se compone de varios elementos que colaboran para construir y ejecutar co
 
 - **Docker CLI (`docker`)**: interfaz de línea de comandos usada por el desarrollador.
 - **Docker Engine / Daemon (`dockerd`)**: expone la API y orquesta operaciones (build, run, pull/push, redes, volúmenes).
-- **`containerd`**: gestiona el ciclo de vida de contenedores (pull, snapshot, ejecución).
+- **containerd**: gestiona el ciclo de vida de contenedores (pull, snapshot, ejecución).
 - **Runtime OCI (`runc`)**: crea el contenedor a nivel de kernel usando namespaces, cgroups y mounts.
 - **BuildKit**: motor de construcción de imágenes con caché eficiente y paralelismo.
 
@@ -75,14 +75,14 @@ Una imagen se construye como un conjunto de **capas de solo lectura** (*read-onl
 
 <img src="../assets/diagrama9.png" alt="Imágenes" width="640">
 
-#### 1.1 Inmutabilidad y reproducibilidad
+#### 1.1. Inmutabilidad y reproducibilidad
 
-Una imagen es **inmutable** en el sentido de que su contenido, identificado por **digest**, no cambia una vez construida. Esto no garantiza resultados idénticos en ejecución, porque también influyen variables de entorno, datos de entrada, servicios externos y el estado del mundo en el momento de correr el contenedor.
+Una imagen es inmutable en el sentido de que su contenido, identificado por **digest**, no cambia una vez construida. Esto no garantiza resultados idénticos en ejecución, porque también influyen variables de entorno, datos de entrada, servicios externos y el estado del mundo en el momento de correr el contenedor.
 
 - Use **digests** para fijar versiones exactas en despliegues críticos.
 - Los **tags** (como `latest` o `1.2.0`) son referencias convenientes pero potencialmente mutables.
 
-#### 1.2 Construcción de imágenes
+#### 1.2. Construcción de imágenes
 
 Las imágenes se construyen principalmente mediante un **Dockerfile**, que describe de forma declarativa y reproducible cada capa. También es posible capturar cambios desde un contenedor en ejecución, pero esa práctica es menos controlada y menos reproducible.
 
@@ -110,17 +110,17 @@ Cada instrucción (`FROM`, `COPY`, `RUN`) puede generar una capa. Si `requiremen
 
 ### 2. Contenedores
 
-Un **contenedor** es una instancia en ejecución (o detenida) creada a partir de una imagen. En el filesystem, el contenedor agrega una **capa de lectura/escritura (RW)** sobre las capas **RO** de la imagen mediante *copy-on-write*.
+Un **contenedor** es una instancia en ejecución (o detenida) creada a partir de una imagen. En el filesystem, el contenedor agrega una capa de lectura/escritura (RW) sobre las capas **RO** de la imagen mediante copy-on-write.
 
 - Los cambios en la capa **RW** son **locales al host**.
 - Si elimina el contenedor, esa capa **RW se pierde**.
-- Puede detener y reiniciar un contenedor en el mismo host mientras exista, conservando su capa RW; sin embargo, **no es una estrategia adecuada de persistencia** en ambientes modernos.
+- Puede detener y reiniciar un contenedor en el mismo host mientras exista, conservando su capa RW; sin embargo, no es una estrategia adecuada de persistencia en ambientes modernos.
 
 <img src="../assets/diagrama10.png" alt="Contenedor sobre capas RO de imagen" width="640">
 
-#### 2.1 Un servicio por contenedor
+#### 2.1. Un servicio por contenedor
 
-"Un servicio por contenedor" es una recomendación de diseño, no una regla absoluta. El motivo es práctico: contenedores de responsabilidad única son más fáciles de **escalar, reiniciar, monitorear y mantener** de forma independiente. Un contenedor puede tener más de un proceso si el caso lo justifica.
+La recomendación de usar **un servicio por contenedor** responde a criterios de diseño, no a una regla estricta. Su valor es principalmente práctico, ya que los contenedores con una única responsabilidad suelen ser más fáciles de **escalar, reiniciar, monitorear y mantener** de manera independiente. Aun así, un contenedor puede incluir más de un proceso cuando el caso lo requiere y existe una justificación técnica para ello.
 
 ### 3. Persistencia: volúmenes y estado
 
@@ -157,11 +157,9 @@ docker run -p 3000:8080 mi-imagen
 
 ## Aislamiento en Linux
 
-En este contexto, **aislamiento** significa que el sistema operativo crea la ilusión de que un conjunto de procesos "vive" en su propio entorno: ve su propio árbol de procesos, sus interfaces de red, sus puntos de montaje y sus recursos, como si no compartiera el host con otras cargas.
+En este contexto, aislamiento significa que el sistema operativo hace que un conjunto de procesos opere como si estuviera en su propio entorno. Cada contenedor percibe su propio árbol de procesos, sus interfaces de red, sus puntos de montaje y otros recursos, aunque en realidad comparta el mismo host con otras cargas.
 
-En realidad, todos esos procesos siguen ejecutándose sobre el **mismo kernel**, con **fronteras lógicas** que limitan lo que pueden ver, usar y afectar. Docker no crea estos mecanismos: se **apoya** en capacidades que el kernel de Linux ya provee.
-
-Los mecanismos principales son:
+Sin embargo, esos procesos siguen ejecutándose sobre el mismo kernel. Lo que existe no es una separación física completa, sino fronteras lógicas que restringen lo que cada proceso puede ver, usar y afectar. Docker no crea estos mecanismos por sí mismo. Más bien, se apoya en capacidades que el kernel de Linux ya ofrece. Los mecanismos principales son:
 
 - **Namespaces:** aíslan recursos como PID (procesos), NET (red), IPC, MNT (montajes) y UTS (hostname).
 - **cgroups:** limitan y monitorean el consumo de CPU, memoria y E/S.
@@ -170,7 +168,7 @@ Los mecanismos principales son:
 
 ## Registro (Registry) y distribución de imágenes
 
-Para desplegar un contenedor en un nuevo nodo se necesitan la **imagen** (capas y metadatos) y recursos de **cómputo**. Los **registros de imágenes** almacenan y distribuyen imágenes en formato OCI.
+Para desplegar un contenedor en un nuevo nodo se necesitan la imagen (capas y metadatos) y recursos de cómputo. Los registros de imágenes almacenan y distribuyen imágenes en formato OCI.
 
 <img src="../assets/diagrama13.png" alt="Registry" width="640">
 
@@ -181,13 +179,11 @@ Conceptos clave:
 - **Tags:** nombres de versión convenientes (p. ej., `1.2.0`, `latest`).
 - **Digests:** identificadores criptográficos **inmutables** del contenido real.
 
-> **Práctica recomendada:** versionar con tags claros y fijar despliegues críticos por **digest** cuando se requiera máxima trazabilidad.
+> **Práctica recomendada:** versionar con tags claros y fijar despliegues críticos por digest cuando se requiera máxima trazabilidad.
 
 ## Seguridad mínima en producción
 
-El objetivo es **reducir la superficie de ataque** y **limitar el impacto** de un contenedor comprometido, aplicando el principio de **mínimo privilegio**.
-
-Las medidas más importantes como punto de partida:
+El objetivo es reducir la superficie de ataque y limitar el impacto de un contenedor comprometido, aplicando el principio de mínimo privilegio. Las medidas más importantes como punto de partida:
 
 - Evite ejecutar procesos como **root** cuando sea posible (flujos rootless y buenas prácticas de Dockerfile).
 - No use `--privileged` salvo necesidad justificada.
@@ -204,7 +200,7 @@ Docker es especialmente útil cuando se requiere:
 - soportar pipelines de **CI/CD**
 - habilitar arquitecturas de microservicios y prácticas cloud native
 
-> **Importante:** Docker facilita el empaquetado y despliegue de contenedores, pero **no resuelve por sí solo** la tolerancia a fallos ni el escalado robusto. Esas capacidades dependen del entorno de ejecución y de herramientas de **orquestación** como Kubernetes.
+> **Importante:** Docker facilita el empaquetado y despliegue de contenedores, pero no resuelve por sí solo la tolerancia a fallos ni el escalado robusto. Esas capacidades dependen del entorno de ejecución y de herramientas de **orquestación** como Kubernetes.
 
 ## Cuándo no utilizar Docker (o cuándo complementarlo)
 
@@ -213,17 +209,6 @@ Docker puede no ser la mejor opción en escenarios como:
 - **multi-tenant estricto:** si se requiere aislamiento fuerte entre cargas, una VM o un entorno con sandbox más robusto puede ser más adecuado.
 - **dependencias de kernel o hardware especializadas** sin una estrategia clara (por ejemplo, aceleración GPU sin la configuración correcta).
 - **estado local crítico** si no existe una estrategia explícita de persistencia.
-
-
-## Convivencia con máquinas virtuales
-
-La elección entre contenedores y VMs no es excluyente. En la práctica se combinan con frecuencia:
-
-- **VMs** para aislamiento fuerte y administración de infraestructura.
-- **Contenedores** para empaquetado ligero, despliegue rápido y portabilidad.
-
-Ambas tecnologías son **complementarias** en arquitecturas modernas.
-
 
 ## Preguntas de autoevaluación
 
