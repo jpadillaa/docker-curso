@@ -143,7 +143,7 @@ La virtualización fue un paso decisivo para mejorar el uso del hardware y forta
 
 ## Preguntas de autoevaluación
 
-- ¿Qué trade-off central resume la virtualización?
+1. ¿Qué trade-off central resume la virtualización?
 
 ## Referencias
 
