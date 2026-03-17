@@ -64,7 +64,7 @@ En Linux, Docker interactúa directamente con el kernel del host. En macOS y Win
 
 ## Objetos fundamentales en Docker
 
-### 1) Imágenes
+### 1. Imágenes
 
 Las **imágenes** son plantillas para crear contenedores. Incluyen binarios, bibliotecas, archivos de configuración y metadatos de ejecución (como el comando por defecto).
 
@@ -75,14 +75,14 @@ Una imagen se construye como un conjunto de **capas de solo lectura** (*read-onl
 
 <img src="../assets/diagrama9.png" alt="Imágenes" width="640">
 
-#### Inmutabilidad y reproducibilidad
+#### 1.1 Inmutabilidad y reproducibilidad
 
 Una imagen es **inmutable** en el sentido de que su contenido, identificado por **digest**, no cambia una vez construida. Esto no garantiza resultados idénticos en ejecución, porque también influyen variables de entorno, datos de entrada, servicios externos y el estado del mundo en el momento de correr el contenedor.
 
 - Use **digests** para fijar versiones exactas en despliegues críticos.
 - Los **tags** (como `latest` o `1.2.0`) son referencias convenientes pero potencialmente mutables.
 
-#### Construcción de imágenes
+#### 1.2 Construcción de imágenes
 
 Las imágenes se construyen principalmente mediante un **Dockerfile**, que describe de forma declarativa y reproducible cada capa. También es posible capturar cambios desde un contenedor en ejecución, pero esa práctica es menos controlada y menos reproducible.
 
@@ -108,7 +108,7 @@ CMD ["python", "main.py"]
 
 Cada instrucción (`FROM`, `COPY`, `RUN`) puede generar una capa. Si `requirements.txt` no cambia entre builds, la capa de dependencias se reutiliza desde caché.
 
-### 2) Contenedores
+### 2. Contenedores
 
 Un **contenedor** es una instancia en ejecución (o detenida) creada a partir de una imagen. En el filesystem, el contenedor agrega una **capa de lectura/escritura (RW)** sobre las capas **RO** de la imagen mediante *copy-on-write*.
 
@@ -118,11 +118,11 @@ Un **contenedor** es una instancia en ejecución (o detenida) creada a partir de
 
 <img src="../assets/diagrama10.png" alt="Contenedor sobre capas RO de imagen" width="640">
 
-#### Un servicio por contenedor
+#### 2.1 Un servicio por contenedor
 
 "Un servicio por contenedor" es una recomendación de diseño, no una regla absoluta. El motivo es práctico: contenedores de responsabilidad única son más fáciles de **escalar, reiniciar, monitorear y mantener** de forma independiente. Un contenedor puede tener más de un proceso si el caso lo justifica.
 
-### 3) Persistencia: volúmenes y estado
+### 3. Persistencia: volúmenes y estado
 
 La capa **RW** del contenedor es un lugar frágil para guardar estado. Para persistir datos correctamente se usan:
 
@@ -133,7 +133,7 @@ La capa **RW** del contenedor es un lugar frágil para guardar estado. Para pers
 
 > **Principio:** trate los contenedores como **efímeros** y externalice el estado en volúmenes, bases de datos o servicios gestionados.
 
-### 4) Redes y puertos
+### 4. Redes y puertos
 
 Docker provee **networking** para conectar contenedores y exponer servicios:
 
@@ -142,7 +142,7 @@ Docker provee **networking** para conectar contenedores y exponer servicios:
 
 <img src="../assets/diagrama12.png" alt="Redes" width="640">
 
-#### Exponer y publicar puertos
+#### 4.1 Exponer y publicar puertos
 
 Una de las operaciones más frecuentes es hacer accesible un servicio desde fuera del contenedor. Docker distingue dos conceptos:
 
