@@ -1,4 +1,4 @@
-# Lectura 3 — Contenedores
+# Lectura 3 - Contenedores
 
 Un contenedor responde a la misma necesidad de **encapsular una aplicación** y su entorno de ejecución, pero lo hace con una estructura más ligera que una máquina virtual. En lugar de empaquetar un **sistema operativo completo**, un contenedor incluye la **aplicación**, sus **dependencias** y las **bibliotecas** necesarias para ejecutarse. En este modelo, la virtualización ocurre a nivel de **sistema operativo**. Los contenedores **comparten el kernel** del sistema operativo anfitrión y se diferencian entre sí por mecanismos de aislamiento y control de recursos.
 
