@@ -1,78 +1,30 @@
-# Módulo 01 – Fundamentos de Contenedores y Docker
+# Módulo 1: Contenedores y Docker
 
-Este módulo introduce los **conceptos esenciales de contenedores** y el **uso básico de Docker**. El enfoque es práctico: instalar (a nivel conceptual) y ejecutar contenedores, comprender su relación con imágenes y registros, y dominar comandos mínimos para operar en la terminal.
+> [!IMPORTANT]
+> Al terminar este módulo, el lector podrá explicar por qué los contenedores se convirtieron en la unidad de despliegue estándar de la industria, construir y ejecutar imágenes Docker, y razonar sobre decisiones de diseño que afectan portabilidad, rendimiento y seguridad en entornos reales.
 
 ## Objetivos de aprendizaje
-- Comprender qué es un contenedor y qué problemas resuelve Docker en entornos de desarrollo y despliegue.
-- Diferenciar contenedores y máquinas virtuales en términos de aislamiento, uso de recursos y portabilidad.
-- Identificar los componentes principales de Docker (daemon, CLI, imágenes, contenedores, registros) y su rol en el flujo de trabajo.
-- Ejecutar, inspeccionar y administrar contenedores con comandos esenciales de Docker.
-- Ejecutar contenedores en modo interactivo y en segundo plano, incluyendo mapeo de puertos.
 
-## Resultados de aprendizaje
-Al finalizar este módulo, el estudiante será capaz de:
+- [ ] Explicar las limitaciones de las VMs que motivaron el surgimiento de los contenedores
+- [ ] Describir los mecanismos de aislamiento del kernel Linux: namespaces y cgroups
+- [ ] Diferenciar imagen, contenedor y Dockerfile, y entender la relación entre ellos
+- [ ] Instalar y verificar Docker en Ubuntu y en Windows con WSL 2
+- [ ] Ejecutar contenedores con `docker run` y gestionar imágenes con los comandos esenciales
 
-- Explicar, con ejemplos concretos, por qué los contenedores mejoran portabilidad y reproducibilidad frente a instalaciones manuales.
-- Comparar contenedores vs. máquinas virtuales, identificando al menos **tres diferencias** y **dos casos de uso** típicos.
-- Describir la arquitectura básica de Docker (daemon, CLI, imágenes, contenedores, registro) y el flujo **pull → run → stop → remove**.
-- Ejecutar y administrar contenedores usando comandos esenciales (`docker run`, `docker ps`, `docker stop`, `docker rm`, `docker images`, `docker pull`, `docker rmi`).
-- Ejecutar un contenedor en modo interactivo (`-it`) y en modo detached (`-d`) con mapeo de puertos (`-p`), verificando su funcionamiento desde el navegador o terminal.
+---
 
-> Nota: Los resultados de aprendizaje están redactados en términos observables y medibles.
+## Lecturas
 
-## Temas
+| # | Título | Descripción |
+|---|--------|-------------|
+| 01 | [Motivación: ¿por qué contenedores?](lecturas/lectura-01.md) | Presenta el problema de portabilidad y consistencia entre entornos, el costo de las máquinas virtuales como solución previa, y cómo los contenedores abordan esas limitaciones mediante una arquitectura de kernel compartido. |
+| 02 | [Virtualización](lecturas/lectura-02.md) | Explica la virtualización basada en hipervisores y máquinas virtuales: qué se virtualiza, tipos de hipervisor, ventajas y trade-offs, con énfasis en por qué este modelo abrió el camino a enfoques más livianos. |
+| 03 | [Contenedores](lecturas/lectura-03.md) | Describe qué es un contenedor, cómo se diferencia de una VM, los mecanismos de aislamiento del kernel Linux (namespaces y cgroups), y un panorama del ecosistema actual de tecnologías para contenedores. |
+| 04 | [Docker](lecturas/lectura-04.md) | Introduce Docker como plataforma: sus tres conceptos centrales (Dockerfile, imagen, contenedor), la arquitectura del Docker Engine, objetos fundamentales (imágenes, contenedores, volúmenes, redes), y consideraciones de seguridad y uso en producción. |
 
-### 1. Fundamentos de contenedores y operación básica con Docker.
-Se estudia la motivación de Docker y se realizan primeras ejecuciones de contenedores para entender el ciclo de vida completo.
+## Tutoriales
 
-**Conexión con módulos posteriores:**  
-Esta base habilita el módulo 2 (construcción de imágenes y `Dockerfile`) y prepara el terreno para redes, volúmenes y orquestación ligera con Compose (módulo 3).
-
-### 2. Conceptos clave
-- **Motivación de contenedores:** portabilidad, consistencia entre entornos, despliegues repetibles.
-- **Contenedores vs. máquinas virtuales:** aislamiento, consumo de recursos, empaquetamiento y tiempos de arranque.
-- **Arquitectura de Docker:** `Docker daemon`, `Docker CLI`, **imágenes**, **contenedores**, **registros** (Docker Hub).
-- **Ciclo de vida del contenedor:** crear/ejecutar, listar, detener, eliminar.
-- **Registros e imágenes:** descarga (`pull`), listado local, eliminación.
-
-### 3. Actividades principales
-1. **Lecturas:** Problemas que resuelve Docker y comparación contenedor vs VM.  
-2. **Demostración guiada:** Arquitectura de Docker y comandos iniciales (`docker version`, `docker info`).  
-3. **Laboratorio guiado:** Ejecutar un servicio web simple en contenedor (Nginx), mapear puertos, verificar acceso, y limpiar recursos.
-
-## Requisitos
-- **Conocimientos recomendados:**
-  - Uso básico de terminal en Linux: navegación, permisos, ejecución de comandos.
-  - Conceptos mínimos de red: puertos, localhost, cliente/servidor.
-- **Conexión con contenidos previos del curso:**
-  - Si el curso parte de Linux básico, este módulo aprovecha esa base para introducir herramientas de empaquetamiento y ejecución.
-- **Cómo prepara para los siguientes módulos:**
-  - Dominar el ciclo `pull/run/stop/rm` y la noción de imágenes es requisito directo para **construir imágenes** con `Dockerfile` (módulo 2) y operar ambientes multi-servicio (módulo 3).
-
-## Criterios generales de evaluación
-- **Criterio 1:** El estudiante explica correctamente (sin ambigüedades) qué es un contenedor y por qué se usa Docker en escenarios reales.
-- **Criterio 2:** Ejecuta contenedores con comandos sencillos y demuestra control del ciclo de vida (listar, detener, eliminar).
-- **Criterio 3:** Realiza una ejecución funcional de un contenedor en modo detached con mapeo de puertos, validando que el servicio responde.
-- **Criterio 4:** Gestiona imágenes a nivel básico (descargar, listar y eliminar cuando aplique) y reconoce el rol de Docker Hub/registro.
-
-## Notas para el profesor
-- Mantener la instalación como **conceptual**: referenciar guías oficiales y advertir sobre diferencias por distribución (Ubuntu/Debian vs Fedora/CentOS).
-- Enfatizar desde el inicio el hábito de **limpieza**: detener/eliminar contenedores y, si aplica, remover imágenes para evitar consumo de disco.
-- Recomendación: usar Nginx por ser un ejemplo visible (navegador) y reforzar el concepto de **mapeo de puertos**.
-- Variación si el entorno tiene restricciones.
-
-## Evaluaciones
-
-### Quiz (conceptos básicos)
-- Contenedores y motivación de Docker.
-- Contenedores vs VMs.
-- Arquitectura de Docker.
-- Comandos esenciales y su propósito.
-
-### Laboratorio 
-**Actividad:** Ejecutar una aplicación simple (p. ej., servidor web Nginx) mapeando puertos; listar contenedores; detenerlos y eliminarlos.  
-**Evidencia mínima:** Capturas o salida de terminal mostrando:
-- Ejecución del contenedor con `-d -p`.
-- `docker ps` / `docker ps -a`.
-- Detención (`docker stop`) y eliminación (`docker rm`).
-- Verificación del servicio (respuesta en navegador o `curl`).
+| # | Título | Descripción |
+|---|--------|-------------|
+| 01 | [Instalación de Docker](tutoriales/tutorial-01.md) | Guía paso a paso para instalar Docker Engine en Ubuntu (desde el repositorio oficial) y Docker Desktop en Windows con WSL 2, incluyendo verificación de la instalación y configuración post-instalación. |
+| 02 | [Docker en acción](tutoriales/tutorial-02.md) | Demuestra el uso de Docker con tres ejemplos ejecutables desde un solo comando: un videojuego clásico, un entorno de desarrollo con VS Code y Python, y una plataforma de ciencia de datos con Jupyter. |
