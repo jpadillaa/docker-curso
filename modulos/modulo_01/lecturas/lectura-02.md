@@ -1,4 +1,4 @@
-# Lectura 2 — Virtualización
+# Lectura 2 - Virtualización
 
 Para comprender las tecnologías de contenedorización, conviene iniciar por los fundamentos de la **virtualización**, que surgió como respuesta a la **subutilización de recursos** en servidores físicos. En muchos entornos, una aplicación rara vez aprovecha por completo la capacidad de procesamiento, memoria y almacenamiento disponibles, lo que genera ineficiencia y costos innecesarios.
 
