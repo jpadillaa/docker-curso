@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Lectura 03 - Construcción de imágenes Docker con Dockerfile
 
 ## Prerequisitos
