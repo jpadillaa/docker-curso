@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Tutorial 01 - Gestión de contenedores y servicios con Docker
 
 > **Objetivo:** Aplicar los comandos fundamentales de Docker para desplegar, inspeccionar y gestionar un servicio web y una base de datos con persistencia de datos, simulando un escenario de desarrollo real.
