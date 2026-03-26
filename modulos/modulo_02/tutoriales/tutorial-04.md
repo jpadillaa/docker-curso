@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Tutorial 03 - Contenerización de GroceryListApp: Dockerfile Optimizado
 
 > **Objetivo:** Contenerizar una aplicación creando un Dockerfile siguiendo algunas prácticas recomendadas para entornos de producción. Se parte del Dockerfile generado en el tutorial anterior, agregando una configuración segura, eficiente y mantenible.
