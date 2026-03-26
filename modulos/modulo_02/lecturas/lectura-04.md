@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Lectura 04 - Buenas prácticas, optimización y troubleshooting
 
 ## Introducción
