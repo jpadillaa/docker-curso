@@ -1,3 +1,4 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
 # Módulo 2: Uso de Docker — Comandos, Imágenes y Buenas Prácticas
 
 > [!IMPORTANT]
@@ -27,6 +28,7 @@
 
 | # | Título | Descripción |
 |---|--------|-------------|
-| 01 | [Tutorial 01: Ejecución de contenedores Docker](tutoriales/tutorial-01.md) | En el tutorial se ejecutan contenedores Docker de forma correcta y reproducible, controlando puertos, volúmenes y variables de entorno para desplegar aplicaciones completas con docker run. |
-| 02 | [Tutorial 02 - Contenerización de GroceryListApp con Docker](tutoriales/tutorial-02.md) | En el tutorial se conteneriza una aplicación creando un archivo Dockerfile. |
-| 03 | [Tutorial 03 - Contenerización de GroceryListApp: Dockerfile Optimizado](tutoriales/tutorial-03.md) | En el tutorial se integran buenas prácticas al Dockerfile creado previamente . |
+| 01 | [Tutorial 01: Gestión de contenedores y servicios con Docker](tutoriales/tutorial-01.md) | En el tutorial se despliega un servidor web Apache y una base de datos PostgreSQL aplicando port mapping, bind mounts, volúmenes nombrados y variables de entorno, y se diagnostica su estado con inspect, logs y exec. |
+| 02 | [Tutorial 02: Ejecución de contenedores Docker](tutoriales/tutorial-02.md) | En el tutorial se ejecutan contenedores Docker de forma correcta y reproducible, controlando puertos, volúmenes y variables de entorno para desplegar aplicaciones completas con docker run. |
+| 03 | [Tutorial 03 - Contenerización de GroceryListApp con Docker](tutoriales/tutorial-03.md) | En el tutorial se conteneriza una aplicación creando un archivo Dockerfile. |
+| 04 | [Tutorial 04 - Contenerización de GroceryListApp: Dockerfile Optimizado](tutoriales/tutorial-04.md) | En el tutorial se integran buenas prácticas al Dockerfile creado previamente . |
