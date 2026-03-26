@@ -715,7 +715,7 @@ services:
 
 ## Errores comunes y troubleshooting
 
-### Puerto del host ya en uso
+### 1. Puerto del host ya en uso
 
 **Síntoma**
 Al ejecutar `docker compose up`, aparece un error similar a:
@@ -736,12 +736,12 @@ ports:
   - "9090:8080"   # Usar 9090 en el host
 ```
 
-### La aplicación no logra conectarse a la base de datos
+### 2. La aplicación no logra conectarse a la base de datos
 
 **Síntoma**  
 La aplicación web presenta errores de conexión rechazada al intentar acceder a la base de datos.
 
-**Posibles causas y acciones recomendadas**
+**Causas**
 
 1. **Dependencia declarada sin validación de disponibilidad**  
    El contenedor de la base de datos puede haberse iniciado, pero PostgreSQL aún no estar listo para aceptar conexiones. En este caso, `depends_on` por sí solo no resulta suficiente.
@@ -761,7 +761,7 @@ La aplicación web presenta errores de conexión rechazada al intentar acceder a
    **Acción recomendada**  
    Revise cuidadosamente valores como usuario, contraseña, nombre de base de datos, hostname y puerto, y confirme que exista coherencia entre ambos servicios.
 
-### Uso incorrecto de `localhost`
+### 3. Uso incorrecto de `localhost`
 
 **Síntoma**  
 La aplicación genera un error como `Connection refused` al intentar conectarse a `localhost:5432`.
@@ -775,12 +775,12 @@ Sustituya `localhost` por el nombre del servicio definido en `compose.yml`, por 
 > [!TIP]
 > En la comunicación entre servicios de Compose debe utilizarse el nombre del servicio y el puerto interno del contenedor.
 
-### Pérdida de datos al recrear contenedores
+### 4. Pérdida de datos al recrear contenedores
 
 **Síntoma**  
 Después de ejecutar `docker compose down` y posteriormente `docker compose up`, los datos de la base de datos ya no están disponibles.
 
-**Causas posibles**
+**Causas**
 
 1. No se definió un volumen nombrado para la ruta de datos del servicio.
 2. Se ejecutó `docker compose down -v`, lo que elimina los volúmenes asociados declarados en la configuración.
@@ -801,9 +801,10 @@ services:
 > [!WARNING]
 > Si se utiliza docker compose down -v, el volumen persistente también será eliminado. En ese escenario, los datos no se conservarán.
 
-### Error de sintaxis o indentación en YAML
+### 5. Error de sintaxis o indentación en YAML
 
 **Síntoma**
+
 Al ejecutar `docker compose up`, aparece un error de parseo:
 
 ```plaintext
@@ -811,9 +812,11 @@ yaml: line 12: mapping values are not allowed in this context
 ```
 
 **Causa**
+
 YAML es un formato estricto en aspectos como la indentación y la estructura. La indentación debe realizarse con espacios, no con tabulaciones, y la jerarquía entre mapas y listas debe mantenerse de forma consistente.
 
 **Solución**
+
 Revise cuidadosamente la indentación y la estructura general del archivo. Resulta recomendable utilizar un editor con soporte para YAML y validar la configuración con el siguiente comando:
 
 ```bash
@@ -822,12 +825,14 @@ $ docker compose config
 
 Este comando parsea y muestra la configuración resultante. Si hay errores de sintaxis, los reporta.
 
-### Servicio que depende de otro aún no preparado
+### 6. Servicio que depende de otro aún no preparado
 
 **Síntoma**
+
 La aplicación intenta conectarse repetidamente a la base de datos durante los primeros segundos y falla, pero eventualmente funciona si se reinicia manualmente.
 
 **Causa**
+
 `depends_on` sin condición solo garantiza que el contenedor se haya **iniciado**, no que el servicio interno esté listo.
 
 **Soluciones**
