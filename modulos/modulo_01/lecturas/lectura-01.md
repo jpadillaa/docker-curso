@@ -1,4 +1,4 @@
-![Banner del curso](../assets/Banner.png)
+![Banner del proyecto](../assets/Banner.png)
 
 # Lectura 1 - Motivación: ¿por qué contenedores?
 
