@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Módulo 1: Contenedores y Docker
 
 > [!IMPORTANT]
