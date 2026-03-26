@@ -610,7 +610,7 @@ Existen dos planos de comunicación claramente diferenciados dentro de una aplic
 - **Desde el host**. El acceso a un servicio ocurre a través de los **puertos publicados** hacia la máquina anfitriona, por ejemplo `localhost:8000` o `localhost:8080`. En consecuencia, solo los servicios que declaran la directiva `ports` pueden ser consumidos directamente desde fuera de la red interna de Docker.
 - **Entre servicios**. La comunicación ocurre dentro de la red del proyecto utilizando el **nombre del servicio** como hostname y el **puerto interno** sobre el que escucha la aplicación dentro del contenedor. Para esta comunicación interna no es necesario publicar puertos hacia el host.
 
-En el ejemplo, PostgreSQL no publica el puerto `5432` hacia la máquina anfitriona. Aun así, los servicios `web` y `adminer` pueden conectarse a la base de datos a través de la red interna de Compose usando `db:5432`, siempre que `db` sea el nombre del servicio definido en `compose.yml`.
+En el ejemplo, PostgreSQL no publica el puerto `5432` hacia la máquina anfitriona. Aun así, los servicios `web` y `adminer` pueden conectarse a la base de datos a través de la red interna de Compose usando `db:5432`, siempre que `db` sea el nombre del servicio definido en `docker-compose.yml`.
 
 Si se requiriera acceso a PostgreSQL desde una herramienta que se ejecuta en el host, como un cliente `psql` local, entonces sí sería necesario publicar el puerto correspondiente, por ejemplo mediante la directiva `ports` con la asignación `5432:5432`.
 
@@ -711,22 +711,25 @@ services:
 ### Advertencia sobre secretos
 
 > [!CAUTION]
-> Las variables de entorno son visibles dentro del contenedor y pueden quedar expuestas en logs, procesos o la inspección del contenedor (`docker inspect`). Para entornos de producción, considere mecanismos de gestión de secretos específicos de la plataforma (como Docker Secrets en Swarm, o los sistemas de secretos de proveedores cloud). En desarrollo, el uso de `.env` es una práctica aceptable siempre que el archivo no se incluya en el repositorio.
+> Las variables de entorno pueden ser consultadas desde el interior del contenedor y, en ciertos casos, quedar expuestas a través de registros, procesos en ejecución o mecanismos de inspección como `docker inspect`. Por esta razón, no deben asumirse como un mecanismo robusto de protección de información sensible. En entornos de producción, conviene utilizar soluciones especializadas para la gestión de secretos, como Docker Secrets en Swarm o los servicios de secretos ofrecidos por plataformas cloud. En entornos de desarrollo, el uso de `.env` puede considerarse una práctica razonable, siempre que dicho archivo no sea incorporado al repositorio ni distribuido de forma inadvertida.
 
 ## Errores comunes y troubleshooting
 
 ### Puerto del host ya en uso
 
-**Síntoma**: al ejecutar `docker compose up`, aparece un error similar a:
+**Síntoma**
+Al ejecutar `docker compose up`, aparece un error similar a:
 
 ```plaintext
 Error response from daemon: driver failed programming external connectivity:
 Bind for 0.0.0.0:8080 failed: port is already allocated
 ```
 
-**Causa**: otro proceso en el host ya ocupa el puerto 8080.
+**Causa**
+Otro proceso en el host ya ocupa el puerto 8080.
 
-**Solución**: identifique el proceso con `lsof -i :8080` o `ss -tlnp | grep 8080` y deténgalo, o cambie el puerto en `compose.yml`:
+**Solución**
+Identifique el proceso con `lsof -i :8080` o `ss -tlnp | grep 8080` y deténgalo, o cambie el puerto en `compose.yml`:
 
 ```yaml
 ports:
@@ -735,41 +738,83 @@ ports:
 
 ### La aplicación no logra conectarse a la base de datos
 
-**Síntoma**: la aplicación web muestra errores de conexión rechazada hacia la base de datos.
+**Síntoma**  
+La aplicación web presenta errores de conexión rechazada al intentar acceder a la base de datos.
 
-**Posibles causas y soluciones**:
+**Posibles causas y acciones recomendadas**
 
-1. **`depends_on` simple sin healthcheck**: el contenedor de la base de datos se inició, pero PostgreSQL aún no está listo. Agregue un healthcheck al servicio `db` y use `condition: service_healthy`.
-2. **Hostname incorrecto**: verifique que la cadena de conexión use el nombre del servicio (`db`), no `localhost` ni una IP fija.
-3. **Credenciales no coinciden**: asegúrese de que las variables de entorno del servicio web coincidan exactamente con las del servicio de base de datos.
+1. **Dependencia declarada sin validación de disponibilidad**  
+   El contenedor de la base de datos puede haberse iniciado, pero PostgreSQL aún no estar listo para aceptar conexiones. En este caso, `depends_on` por sí solo no resulta suficiente.
+
+   **Acción recomendada**  
+   Defina un `healthcheck` en el servicio `db` y, cuando la configuración lo requiera, utilice una condición como `service_healthy`. Además, resulta conveniente que la propia aplicación implemente reintentos controlados al establecer la conexión.
+
+2. **Hostname incorrecto en la cadena de conexión**  
+   La aplicación intenta conectarse usando `localhost` o una dirección IP fija.
+
+   **Acción recomendada**  
+   Verifique que la cadena de conexión utilice el nombre del servicio, por ejemplo `db`, como hostname dentro de la red de Compose.
+
+3. **Inconsistencia en credenciales o parámetros de conexión**  
+   Las variables de entorno definidas en la aplicación no coinciden con las configuradas en el servicio de base de datos.
+
+   **Acción recomendada**  
+   Revise cuidadosamente valores como usuario, contraseña, nombre de base de datos, hostname y puerto, y confirme que exista coherencia entre ambos servicios.
 
 ### Uso incorrecto de `localhost`
 
-**Síntoma**: la aplicación lanza `Connection refused` al intentar conectarse a `localhost:5432`.
+**Síntoma**  
+La aplicación genera un error como `Connection refused` al intentar conectarse a `localhost:5432`.
 
-**Causa**: `localhost` dentro de un contenedor refiere al propio contenedor, no al host ni a otros contenedores.
+**Causa**  
+Dentro de un contenedor, `localhost` hace referencia al propio contenedor. No corresponde ni al host ni a otro servicio del mismo proyecto.
 
-**Solución**: reemplace `localhost` por el nombre del servicio en la cadena de conexión.
+**Solución**  
+Sustituya `localhost` por el nombre del servicio definido en `compose.yml`, por ejemplo `db`.
 
-### Datos que se pierden al recrear contenedores
+> [!TIP]
+> En la comunicación entre servicios de Compose debe utilizarse el nombre del servicio y el puerto interno del contenedor.
 
-**Síntoma**: al ejecutar `docker compose down` y luego `docker compose up`, los datos de la base de datos han desaparecido.
+### Pérdida de datos al recrear contenedores
 
-**Causa**: no se definió un volumen nombrado para la ruta de datos del servicio, o se ejecutó `docker compose down -v`.
+**Síntoma**  
+Después de ejecutar `docker compose down` y posteriormente `docker compose up`, los datos de la base de datos ya no están disponibles.
 
-**Solución**: declare un volumen nombrado en el nivel superior de `docker-compose.yml` y móntelo en la ruta de datos correspondiente del servicio.
+**Causas posibles**
+
+1. No se definió un volumen nombrado para la ruta de datos del servicio.
+2. Se ejecutó `docker compose down -v`, lo que elimina los volúmenes asociados declarados en la configuración.
+
+**Solución**  
+Declare un volumen nombrado en el nivel superior del archivo `compose.yml` y móntelo en la ruta de persistencia del servicio correspondiente.
+
+```yaml
+volumes:
+  pgdata:
+
+services:
+  db:
+    image: postgres:16
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+```
+> [!WARNING]
+> Si se utiliza docker compose down -v, el volumen persistente también será eliminado. En ese escenario, los datos no se conservarán.
 
 ### Error de sintaxis o indentación en YAML
 
-**Síntoma**: al ejecutar `docker compose up`, aparece un error de parseo:
+**Síntoma**
+Al ejecutar `docker compose up`, aparece un error de parseo:
 
 ```plaintext
 yaml: line 12: mapping values are not allowed in this context
 ```
 
-**Causa**: YAML es estricto con la indentación (debe ser con espacios, no tabulaciones) y con la estructura de los mapas y listas.
+**Causa**
+YAML es un formato estricto en aspectos como la indentación y la estructura. La indentación debe realizarse con espacios, no con tabulaciones, y la jerarquía entre mapas y listas debe mantenerse de forma consistente.
 
-**Solución**: revise la indentación del archivo. Use un editor con soporte YAML o valide con:
+**Solución**
+Revise cuidadosamente la indentación y la estructura general del archivo. Resulta recomendable utilizar un editor con soporte para YAML y validar la configuración con el siguiente comando:
 
 ```bash
 $ docker compose config
@@ -779,42 +824,43 @@ Este comando parsea y muestra la configuración resultante. Si hay errores de si
 
 ### Servicio que depende de otro aún no preparado
 
-**Síntoma**: la aplicación intenta conectarse repetidamente a la base de datos durante los primeros segundos y falla, pero eventualmente funciona si se reinicia manualmente.
+**Síntoma**
+La aplicación intenta conectarse repetidamente a la base de datos durante los primeros segundos y falla, pero eventualmente funciona si se reinicia manualmente.
 
-**Causa**: `depends_on` sin condición solo garantiza que el contenedor se haya **iniciado**, no que el servicio interno esté listo.
+**Causa**
+`depends_on` sin condición solo garantiza que el contenedor se haya **iniciado**, no que el servicio interno esté listo.
 
-**Soluciones**:
-
+**Soluciones**
 - Agregar healthchecks y `condition: service_healthy`
 - Implementar lógica de reintentos con *backoff* en la aplicación
 - Usar la política `restart: unless-stopped` para que el contenedor se reinicie automáticamente si falla al inicio
 
-## Resumen de comandos de Compose
+## Resumen de comandos principales de Compose
 
 | Comando | Descripción |
 |---------|-------------|
-| `docker compose up` | Crea y levanta todos los servicios |
-| `docker compose up -d` | Levanta los servicios en modo *detached* |
-| `docker compose up --build` | Reconstruye imágenes antes de levantar |
-| `docker compose ps` | Lista los servicios y su estado |
-| `docker compose logs` | Muestra los logs de todos los servicios |
-| `docker compose logs -f <servicio>` | Sigue los logs de un servicio en tiempo real |
-| `docker compose exec <servicio> <cmd>` | Ejecuta un comando en un servicio en ejecución |
-| `docker compose stop` | Detiene los servicios sin eliminar contenedores |
-| `docker compose down` | Detiene y elimina contenedores y redes |
-| `docker compose down -v` | Además elimina volúmenes nombrados |
-| `docker compose config` | Valida y muestra la configuración resultante |
+| `docker compose up` | Construye, crea e inicia los servicios definidos en la configuración. |
+| `docker compose up -d` | Inicia los servicios en modo desacoplado, es decir, en segundo plano. |
+| `docker compose up --build` | Fuerza la construcción de las imágenes antes de iniciar los servicios. |
+| `docker compose ps` | Lista los contenedores del proyecto y muestra su estado actual. |
+| `docker compose logs` | Muestra los logs agregados de los servicios del proyecto. |
+| `docker compose logs -f <servicio>` | Muestra y sigue en tiempo real los logs de un servicio específico. |
+| `docker compose exec <servicio> <cmd>` | Ejecuta un comando dentro de un contenedor en ejecución asociado al servicio indicado. |
+| `docker compose stop` | Detiene los servicios sin eliminar los contenedores. |
+| `docker compose down` | Detiene y elimina los contenedores y las redes creadas para el proyecto. |
+| `docker compose down -v` | Además de lo anterior, elimina los volúmenes nombrados definidos en Compose y los volúmenes anónimos asociados. |
+| `docker compose config` | Valida, resuelve y muestra la configuración resultante en formato canónico. |
 
 ## Buenas prácticas iniciales
 
-- **Un servicio, una responsabilidad**: cada servicio debe encapsular un componente específico de la aplicación. No agrupe la base de datos y la aplicación web en el mismo contenedor.
-- **Nombres de servicio descriptivos**: use nombres que reflejen la función (`db`, `web`, `cache`, `worker`), no nombres genéricos (`service1`, `app1`).
-- **Externalice la configuración**: mantenga credenciales y parámetros de configuración en archivos `.env` o variables de entorno, no *hardcodeados* en el `docker-compose.yml` ni en el código fuente.
-- **No incluya credenciales en el repositorio**: agregue `.env` a `.gitignore`.
-- **Use volúmenes para datos con estado**: cualquier servicio que almacene datos persistentes (bases de datos, almacenamiento de archivos) debe tener un volumen nombrado.
-- **No confunda Compose con una solución de producción**: Docker Compose es una herramienta orientada a desarrollo y pruebas locales. Para ambientes de producción con múltiples nodos, se requieren plataformas de orquestación como Kubernetes o servicios gestionados de contenedores en la nube.
-- **Documente los comandos operativos**: incluya en el `README` del proyecto los comandos necesarios para levantar, detener y verificar la aplicación.
-- **Versioné el archivo `docker-compose.yml`**: al igual que el código fuente, el archivo Compose debe estar bajo control de versiones.
+- **Un servicio, una responsabilidad**. Cada servicio debe encapsular una función claramente definida dentro de la aplicación. No resulta recomendable agrupar, por ejemplo, la base de datos y la aplicación web en un mismo contenedor, ya que ello dificulta la separación de responsabilidades, el mantenimiento y la evolución del sistema.
+- **Nombres de servicio descriptivos**. Utilice nombres que reflejen la función del componente, como `db`, `web`, `cache` o `worker`. Evite nombres genéricos que no aporten significado técnico, como `service1` o `app1`.
+- **Externalice la configuración**. Mantenga parámetros de configuración, credenciales y valores dependientes del entorno fuera del código fuente y fuera de los valores fijados directamente en el archivo `docker-compose.yml`. Para ello, utilice variables de entorno, archivos `.env` u otros mecanismos adecuados según el contexto.
+- **No incorpore credenciales al repositorio**. El archivo `.env` y cualquier otro archivo que contenga información sensible deben excluirse del control de versiones, por ejemplo mediante `.gitignore`.
+- **Utilice volúmenes para servicios con estado**. Todo servicio que requiera persistencia, como bases de datos o almacenamiento de archivos, debe apoyarse en volúmenes. Esto permite desacoplar los datos del ciclo de vida del contenedor y reduce el riesgo de pérdida de información.
+- **No confunda Compose con una plataforma de orquestación de gran escala**. Docker Compose es especialmente útil en desarrollo, pruebas locales y escenarios controlados de despliegue. Sin embargo, en arquitecturas de mayor complejidad, con requisitos de escalabilidad, alta disponibilidad o múltiples nodos, suelen requerirse soluciones de orquestación más robustas, como Kubernetes o servicios gestionados de contenedores en la nube.
+- **Documente la operación básica del proyecto**. Incluya en el `README` los comandos mínimos para construir, iniciar, detener, inspeccionar y depurar la aplicación. Esta práctica mejora la reproducibilidad y reduce la fricción de incorporación al proyecto.
+- **Mantenga el archivo `docker-compose.yml` bajo control de versiones**. El archivo de Compose forma parte de la definición operativa de la aplicación y debe tratarse con el mismo rigor que el código fuente.
 
 ## Preguntas de autoevaluación
 
@@ -822,17 +868,12 @@ Este comando parsea y muestra la configuración resultante. Si hay errores de si
 
 2. ¿Cuál es la diferencia entre las directivas `build` e `image` en un servicio de Compose?
 
-3. Si un servicio de Compose se llama `db`, ¿cómo puede otro servicio de la misma red conectarse a él? ¿Qué papel cumple el DNS interno de Docker?
+3. ¿Por qué `depends_on` sin condición adicional no garantiza que la base de datos esté lista para recibir conexiones? ¿Qué alternativas existen?
 
-4. ¿Por qué `depends_on` sin condición adicional no garantiza que la base de datos esté lista para recibir conexiones? ¿Qué alternativas existen?
+4. Un desarrollador reporta que su aplicación Flask contenerizada no puede conectarse a PostgreSQL, pero ambos contenedores están en estado `running`. La cadena de conexión usa `localhost:5432`. ¿Cuál es la causa probable y cómo se resuelve?
 
-5. Un desarrollador reporta que su aplicación Flask contenerizada no puede conectarse a PostgreSQL, pero ambos contenedores están en estado `running`. La cadena de conexión usa `localhost:5432`. ¿Cuál es la causa probable y cómo se resuelve?
+5. ¿Qué diferencia hay entre un puerto publicado (`ports`) y la comunicación entre servicios por la red interna de Compose?
 
-6. ¿Qué ocurre con los datos de una base de datos PostgreSQL si se ejecuta `docker compose down` sin la opción `-v`? ¿Y con la opción `-v`?
-
-7. ¿Qué diferencia hay entre un puerto publicado (`ports`) y la comunicación entre servicios por la red interna de Compose?
-
-8. ¿Por qué Docker Compose no se considera una herramienta de producción para entornos distribuidos, y qué tipo de soluciones se usan en su lugar?
 
 ## Referencias
 
