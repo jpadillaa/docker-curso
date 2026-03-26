@@ -1,5 +1,5 @@
 ![Banner del proyecto](/modulos/assets/Banner.png)
-# Módulo 2: Uso de Docker — Comandos, Imágenes y Buenas Prácticas
+# Módulo 2: Uso de Docker: Comandos, imágenes y buenas prácticas
 
 > [!IMPORTANT]
 > Al terminar este módulo, el lector podrá operar contenedores Docker con fluidez desde la línea de comandos, construir imágenes personalizadas mediante Dockerfiles, y aplicar buenas prácticas de optimización, seguridad y troubleshooting en sus flujos de trabajo.
