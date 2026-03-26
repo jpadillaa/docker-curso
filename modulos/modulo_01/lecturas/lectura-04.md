@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Lectura 4 - Docker
 
 Docker es una plataforma open source que estandariza el empaquetado, la distribución y la ejecución de aplicaciones mediante contenedores. Su propósito es permitir que una misma aplicación se ejecute de forma consistente entre entornos (desarrollo, pruebas, producción), mitigando el problema clásico de **"en mi máquina funciona"** al encapsular el software con sus dependencias y configuración necesaria.
