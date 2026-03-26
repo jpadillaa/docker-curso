@@ -484,36 +484,36 @@ Cuando la conectividad entre servicios falla, Docker ofrece herramientas que per
 | `docker compose ps` | Lista servicios del proyecto, sus puertos y estado |
 | `docker compose logs <servicio>` | Muestra los logs de un servicio, útil para identificar errores de conexión |
 
+## Diagnóstico de redes en Docker
+
 ### Verificar resolución DNS desde un contenedor
 
 ```bash
 # Opción 1: usar getent (si disponible en la imagen)
-$ docker compose exec api getent hosts db
+docker compose exec <servicio-origen> getent hosts <servicio-destino>
 
 # Opción 2: usar Python
-$ docker compose exec api python -c "import socket; print(socket.gethostbyname('db'))"
-172.20.0.3
+docker compose exec <servicio-origen> python -c "import socket; print(socket.gethostbyname('<servicio-destino>'))"
 
 # Opción 3: usar nslookup (requiere bind-tools o dnsutils)
-$ docker compose exec api nslookup db
+docker compose exec <servicio-origen> nslookup <servicio-destino>
 ```
 
 Si la resolución falla, las causas más probables son las siguientes:
 
-- los servicios no comparten una red
-- el nombre del servicio está mal escrito
-- el contenedor de destino no se encuentra en ejecución
+- Los servicios no comparten una red.
+- El nombre del servicio está mal escrito.
+- El contenedor de destino no se encuentra en ejecución.
 
 ### Verificar si un puerto está abierto desde un contenedor
 
 ```bash
-# Usar Python para probar la conexión TCP
-$ docker compose exec api python -c "
+docker compose exec <servicio-origen> python -c "
 import socket
 s = socket.socket()
 s.settimeout(3)
 try:
-    s.connect(('db', 5432))
+    s.connect(('<servicio-destino>', <puerto>))
     print('Conexión exitosa')
 except Exception as e:
     print(f'Error: {e}')
@@ -525,9 +525,12 @@ finally:
 ### Inspeccionar la IP de un contenedor
 
 ```bash
-$ docker inspect redes-demo-db-1 --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
-172.20.0.3
+docker inspect <nombre-contenedor> \
+    --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
 ```
+
+> [!NOTE]
+> El nombre del contenedor en Docker Compose sigue la convención `<proyecto>-<servicio>-<réplica>`. Para identificar el nombre exacto, ejecutar `docker compose ps`.
 
 > [!WARNING]
 > Las direcciones IP de los contenedores son efímeras. No deben utilizarse en configuraciones ni en cadenas de conexión. La práctica recomendada consiste en utilizar siempre nombres de servicio.
