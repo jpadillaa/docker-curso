@@ -28,23 +28,4 @@ Al finalizar satisfactoriamente este material, el estudiante estará en capacida
 
 7.  Indentificar vulnerabilidades comunes y mitigaciones como el *principio de menor privilegio* y el uso de usuarios **non-root**.
 
-8.  **Proyecto**
-    Sintetizar los conocimientos en el despliegue de una arquitectura de **microservicios completa**:
-    * Frontend
-    * Backend
-    * Base de Datos
-    * Caché
-    * Proxy Inverso
-
 > **TIP:** El proyecto asegura la operatividad y mantenibilidad del sistema, simulando un escenario del mundo real.
-
-## Módulos
-
-| Semana | Título del módulo | Foco | Actividades |
-|:-----:|-------------------|----------------|------------------------|
-| **1** | [Fundamentos de contenedores y Docker](./modulos/modulo_01/) | Conceptos, instalación, primeros comandos | Laboratorio guiado de comandos de Docker|
-| **2** | Imágenes y Dockerfile | Construcción de imágenes, capas, tags | Laboratorio de Dockerfile |
-| **3** | Volúmenes, redes y Docker Compose | Persistencia, redes, multi-servicio | Laboratorio mini-proyecto con Docker Compose |
-| **4** | Buenas prácticas con Docker | Optimización, organización, observabilidad básica | Laboratorio de refactorización |
-| **5** | Seguridad en contenedores | Principios de seguridad | Proyecto |
-
