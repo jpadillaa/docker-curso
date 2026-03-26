@@ -2,7 +2,7 @@
 # Módulo 2: Uso de Docker: Comandos, imágenes y buenas prácticas
 
 > [!IMPORTANT]
-> Al terminar este módulo, el lector podrá operar contenedores Docker con fluidez desde la línea de comandos, construir imágenes personalizadas mediante Dockerfiles, y aplicar buenas prácticas de optimización, seguridad y troubleshooting en sus flujos de trabajo.
+> Al terminar este módulo, podrá operar contenedores Docker desde la línea de comandos, construir imágenes personalizadas mediante Dockerfiles, y aplicar buenas prácticas de optimización, seguridad y troubleshooting en su flujos de trabajo.
 
 ## Objetivos de aprendizaje
 
