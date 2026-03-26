@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Tutorial 02: Ejecución de contenedores Docker
 
 > **Objetivo:**  Ejecutar contenedores Docker de forma correcta y reproducible, controlando puertos, volúmenes y variables de entorno para desplegar aplicaciones completas con un solo comando.
