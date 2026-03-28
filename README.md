@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Fundamentos de Docker
 
 Este curso introduce **Docker** desde cero para personas con bases en Linux y Bash, pero sin experiencia previa en contenedores. Aprenderá a crear y ejecutar contenedores, construir imágenes con `Dockerfile`, gestionar redes y volúmenes, automatizar entornos con **Docker Compose** y aplicar buenas prácticas de construcción y operación. 
@@ -29,3 +31,11 @@ Al finalizar satisfactoriamente este material, el estudiante estará en capacida
 7.  Indentificar vulnerabilidades comunes y mitigaciones como el *principio de menor privilegio* y el uso de usuarios **non-root**.
 
 > **TIP:** El proyecto asegura la operatividad y mantenibilidad del sistema, simulando un escenario del mundo real.
+
+## Módulos
+
+| # | Módulo | Descripción | Lecturas | Tutoriales |
+|---|--------|-------------|----------|------------|
+| 01 | [Contenedores y Docker](modulos/modulo_01/README.md) | Fundamentos de virtualización, mecanismos de aislamiento del kernel Linux, arquitectura de Docker y sus conceptos centrales. Instalación y primeros contenedores. | 4 | 2 |
+| 02 | [Uso de Docker: Comandos, imágenes y buenas prácticas](modulos/modulo_02/README.md) | Operación de contenedores desde la CLI, opciones avanzadas de `docker run`, construcción de imágenes con Dockerfile, y técnicas de optimización, seguridad y troubleshooting. | 4 | 4 |
+| 03 | [Aplicaciones multicontenedor con Docker Compose](modulos/modulo_03/README.md) | Definición declarativa de aplicaciones compuestas, modelo de red y descubrimiento de servicios, persistencia y configuración en Compose, y diagnóstico sistemático de fallos. | 4 | 2 |
