@@ -360,7 +360,7 @@ services:
 
 Cada variable se establece en formato `NOMBRE=VALOR` y está disponible para el proceso dentro del contenedor.
 
-### Interpolación desde `.env`
+### Configuración de entorno mediante archivos `.env`
 
 Docker Compose lee automáticamente un archivo `.env` en el mismo directorio que `docker-compose.yml`. Las variables definidas allí pueden referenciarse con la sintaxis `${VARIABLE}`:
 
@@ -395,7 +395,7 @@ Esta separación permite que `docker-compose.yml` sea un archivo versionable y g
 
 ### Archivos de entorno por servicio
 
-La directiva `env_file` permite cargar variables desde un archivo específico directamente en el contenedor, sin pasar por la interpolación de Compose:
+La directiva `env_file` permite cargar variables de entorno desde un archivo específico directamente en el contenedor, sin depender del mecanismo de interpolación de Docker Compose:
 
 ```yaml
 services:
@@ -408,7 +408,7 @@ services:
 ```
 
 > [!NOTE]
-> Existe una diferencia sutil: las variables en `.env` se interpolan dentro de `docker-compose.yml` durante el parseo del archivo. Las variables cargadas con `env_file` se inyectan directamente como variables de entorno del contenedor, sin interpolación en el archivo Compose.
+> Existe una diferencia importante entre ambos mecanismos. Las variables definidas en `.env` se utilizan para interpolar valores dentro de `docker-compose.yml` durante el procesamiento del archivo. En cambio, las variables cargadas mediante `env_file` se inyectan directamente en el entorno del contenedor y no participan en la interpolación del archivo Compose.
 
 ### Verificar variables de entorno en un contenedor
 
@@ -420,38 +420,41 @@ $ docker compose exec app env
 $ docker compose exec app env | grep DATABASE_URL
 ```
 
-### Precedencia de variables
+### Precedencia de variables de entorno
 
-Cuando una misma variable se define en múltiples fuentes, Compose aplica un orden de precedencia. La lista siguiente va de mayor a menor prioridad:
+Cuando una misma variable se define en más de una fuente, Docker Compose resuelve el valor final siguiendo un orden de precedencia. De mayor a menor prioridad, el orden general es el siguiente.
 
-1. Variables definidas en `environment` dentro de `docker-compose.yml`
-2. Variables del shell del usuario que ejecuta `docker compose`
-3. Variables del archivo `.env`
-4. Variables de archivos referenciados con `env_file`
+1. Variables pasadas explícitamente en la línea de comandos, por ejemplo con `docker compose run -e`
+2. Variables declaradas en `environment` o `env_file` cuando su valor proviene de interpolación desde el shell o desde un archivo de entorno cargado por Compose, como `.env` o `--env-file`
+3. Variables definidas directamente en `environment` dentro de `docker-compose.yml`
+4. Variables definidas en archivos referenciados mediante `env_file`
 
 > [!TIP]
-> Si una variable no se carga como esperaba, verifique que no esté siendo sobreescrita por una fuente de mayor prioridad. Ejecute `docker compose config` para ver la configuración resultante con todas las variables resueltas.
+> Si una variable no se carga como esperaba, conviene verificar si está siendo sobrescrita por una fuente de mayor prioridad. Para inspeccionar la configuración resultante con los valores ya resueltos, puede utilizar `docker compose config`.
 
 ## Credenciales y datos sensibles
 
 ### El problema de las contraseñas en texto plano
 
-Los archivos `.env` contienen frecuentemente credenciales: contraseñas de bases de datos, claves de API, tokens de acceso. Estos valores se almacenan en texto plano y, si el archivo se incluye en el repositorio por error, quedan expuestos de forma permanente en el historial de versiones.
+Los archivos `.env` suelen contener credenciales, como contraseñas de bases de datos, claves de API y tokens de acceso. Estos valores se almacenan en texto plano y, si el archivo se incorpora al repositorio por error, pueden quedar expuestos de manera permanente en el historial de versiones.
 
-### Limitaciones del enfoque con `.env`
+### Limitaciones del uso de `.env`
 
-El uso de `.env` es una práctica aceptable en entornos de desarrollo, pero tiene limitaciones claras:
+El uso de archivos `.env` puede ser aceptable en entornos de desarrollo. Sin embargo, este enfoque presenta limitaciones importantes.
 
-- Los valores son visibles en texto plano para cualquier persona con acceso al archivo
-- Las variables de entorno son visibles dentro del contenedor con `env` o mediante `docker inspect`
-- Un archivo `.env` compartido entre el equipo puede propagarse sin control
+- Los valores permanecen visibles en texto plano para cualquier persona con acceso al archivo.
+- Las variables de entorno pueden inspeccionarse dentro del contenedor mediante comandos como `env` o a través de mecanismos como `docker inspect`.
+- Un archivo `.env` compartido entre integrantes del equipo puede circular sin control y aumentar el riesgo de exposición.
 
 ### Buenas prácticas iniciales
 
-- **Agregue `.env` a `.gitignore`**: esto evita que las credenciales se incluyan en el repositorio
-- **Proporcione un archivo `.env.example`**: incluya las claves sin valores como plantilla para nuevos desarrolladores
-- **No incluya credenciales en el `Dockerfile`**: las instrucciones `ENV` y `ARG` con valores sensibles quedan registradas en las capas de la imagen
-- **No incluya credenciales en el `docker-compose.yml` versionado**: use siempre interpolación desde `.env` o `env_file`
+- **Agregue `.env` a `.gitignore`**. Esta medida reduce el riesgo de incorporar credenciales al repositorio por error.
+
+- **Proporcione un archivo `.env.example`**. Incluya las variables requeridas sin valores, de modo que funcione como plantilla para nuevos integrantes del proyecto.
+
+- **No incorpore credenciales en el `Dockerfile`**. Las instrucciones `ENV` y `ARG` con valores sensibles pueden quedar registradas en las capas de la imagen, lo que amplía la superficie de exposición.
+
+- **No incluya credenciales directamente en el `docker-compose.yml` versionado**. Utilice mecanismos de configuración externa, como interpolación desde `.env` o archivos definidos mediante `env_file`.
 
 #### Ejemplo de `.env.example`
 
@@ -464,7 +467,7 @@ APP_SECRET_KEY=
 ```
 
 > [!CAUTION]
-> Un archivo `.env` no es una solución de gestión de secretos. Para entornos de producción, considere herramientas como Docker Secrets (en modo Swarm), HashiCorp Vault o los sistemas de secretos de su proveedor cloud (AWS Secrets Manager, Google Secret Manager, Azure Key Vault). El tratamiento de estas herramientas excede el alcance de esta lectura.
+> Un archivo `.env` no constituye una solución de gestión de secretos. En entornos de producción, es necesario recurrir a mecanismos especializados, como Docker Secrets en modo Swarm, HashiCorp Vault o los servicios de gestión de secretos ofrecidos por proveedores cloud, entre ellos AWS Secrets Manager, Google Secret Manager y Azure Key Vault. El estudio detallado de estas herramientas se encuentra por fuera del alcance de esta lectura.
 
 ## Ejemplo práctico guiado
 
@@ -634,25 +637,25 @@ volumes:
 #### Servicio `app`
 
 | Directiva | Función |
-|-----------|---------|
-| `build: .` | Construye la imagen desde el `Dockerfile` local |
-| `ports: - "8000:8000"` | Publica el puerto 8000 hacia el host |
-| `environment` | Inyecta la cadena de conexión y la variable de debug, interpoladas desde `.env` |
-| `volumes: - ./app:/app` | Bind mount que monta el código fuente del host en el contenedor. Los cambios en `app/main.py` se reflejan en tiempo real si Flask tiene debug habilitado |
-| `depends_on` con healthcheck | Espera a que PostgreSQL esté operativo antes de iniciar |
+|---|---|
+| `build: .` | Construye la imagen a partir del `Dockerfile` ubicado en el directorio local. |
+| `ports: - "8000:8000"` | Publica el puerto `8000` del contenedor hacia el host. |
+| `environment` | Inyecta la cadena de conexión y la variable de depuración, con valores interpolados desde `.env`. |
+| `volumes: - ./app:/app` | Establece un *bind mount* que enlaza el código fuente del host con el contenedor. De este modo, los cambios realizados en archivos como `app/main.py` se reflejan de forma inmediata, siempre que Flask se ejecute con depuración habilitada. |
+| `depends_on` con `healthcheck` | Coordina el arranque del servicio para que la aplicación espere a que PostgreSQL se encuentre operativo antes de iniciar. |
 
 #### Servicio `db`
 
 | Directiva | Función |
-|-----------|---------|
-| `image: postgres:16` | Usa la imagen oficial de PostgreSQL |
-| `environment` | Configura usuario, contraseña y base de datos, interpolados desde `.env` |
-| `volumes: - pgdata:/var/lib/postgresql/data` | Monta el volumen nombrado en la ruta de datos de PostgreSQL |
-| `healthcheck` | Permite verificar que el motor está listo para recibir conexiones |
+|---|---|
+| `image: postgres:16` | Utiliza la imagen oficial de PostgreSQL en su versión 16. |
+| `environment` | Define el usuario, la contraseña y la base de datos a partir de variables interpoladas desde `.env`. |
+| `volumes: - pgdata:/var/lib/postgresql/data` | Monta el volumen nombrado `pgdata` en la ruta de almacenamiento de datos de PostgreSQL. |
+| `healthcheck` | Permite verificar que el motor de base de datos se encuentra listo para aceptar conexiones. |
 
 #### Sección `volumes`
 
-La declaración `pgdata:` en el nivel superior registra el volumen como recurso del proyecto. Docker lo crea automáticamente si no existe.
+La declaración `pgdata:` en el nivel superior del archivo registra este volumen como un recurso propio del proyecto. Si aún no existe, Docker lo crea automáticamente al levantar los servicios.
 
 ### Levantar y validar
 
@@ -753,81 +756,111 @@ $ docker volume prune
 > [!WARNING]
 > `docker volume prune` elimina todos los volúmenes que no están montados en ningún contenedor activo. Verifique que no haya volúmenes con datos importantes antes de ejecutarlo.
 
-## Errores comunes y troubleshooting
+## Errores comunes y resolución de problemas
 
-### Pérdida de datos por no usar volumen
+### Pérdida de datos por ausencia de volumen
 
-**Síntoma**: al recrear un contenedor de base de datos, los datos desaparecen.
+**Síntoma**  
+Al recrear un contenedor de base de datos, los datos desaparecen.
 
-**Causa**: no se declaró un volumen nombrado. Los datos residían en la capa de escritura del contenedor.
+**Causa**  
+No se declaró un volumen nombrado, por lo que los datos quedaron almacenados únicamente en la capa de escritura del contenedor.
 
-**Solución**: declare un volumen nombrado en el nivel superior de `docker-compose.yml` y móntelo en la ruta de datos del servicio.
+**Solución**  
+Declare un volumen nombrado en el nivel superior de `docker-compose.yml` y móntelo en la ruta de datos utilizada por el servicio.
 
-### Pérdida accidental de datos por `down -v`
+### Pérdida accidental de datos por uso de `down -v`
 
-**Síntoma**: después de ejecutar `docker compose down -v`, la base de datos aparece vacía.
+**Síntoma**  
+Después de ejecutar `docker compose down -v`, la base de datos aparece vacía.
 
-**Causa**: el flag `-v` elimina los volúmenes nombrados del proyecto.
+**Causa**  
+El modificador `-v` elimina los volúmenes nombrados asociados al proyecto.
 
-**Solución**: no utilice `-v` a menos que tenga la intención explícita de destruir los datos. Para detener y eliminar contenedores sin afectar los volúmenes, use `docker compose down` sin flags adicionales.
+**Solución**  
+No utilice `-v` salvo que exista la intención explícita de destruir los datos persistentes. Si únicamente desea detener y eliminar los contenedores sin afectar los volúmenes, utilice `docker compose down` sin modificadores adicionales.
 
-### Montaje en ruta incorrecta
+### Montaje en una ruta incorrecta
 
-**Síntoma**: el contenedor arranca, pero la aplicación no encuentra los archivos esperados o la base de datos se inicializa como si fuera nueva.
+**Síntoma**  
+El contenedor inicia, pero la aplicación no encuentra los archivos esperados o la base de datos se comporta como si fuera nueva.
 
-**Causa**: la ruta de montaje dentro del contenedor no coincide con la ruta donde el proceso espera encontrar los datos. Por ejemplo, montar en `/var/lib/postgres/data` (sin `ql`) en lugar de `/var/lib/postgresql/data`.
+**Causa**  
+La ruta de montaje dentro del contenedor no coincide con la ruta en la que el proceso espera encontrar los datos. Un ejemplo común es montar en `/var/lib/postgres/data` en lugar de `/var/lib/postgresql/data`.
 
-**Solución**: consulte la documentación de la imagen para verificar la ruta correcta de datos. Para PostgreSQL, la ruta estándar es `/var/lib/postgresql/data`.
+**Solución**  
+Consulte la documentación oficial de la imagen para verificar la ruta correcta de almacenamiento. En PostgreSQL, la ruta estándar es `/var/lib/postgresql/data`.
 
-### Permisos erróneos en bind mounts
+### Permisos incorrectos en *bind mounts*
 
-**Síntoma**: el contenedor reporta errores de permiso al intentar leer o escribir en un directorio montado.
+**Síntoma**  
+El contenedor reporta errores de permisos al intentar leer o escribir en un directorio montado.
 
-**Causa**: el proceso dentro del contenedor se ejecuta con un UID (p. ej., `1000` o `999`) que no tiene permisos sobre el directorio del host.
+**Causa**  
+El proceso dentro del contenedor puede ejecutarse con un UID distinto al del propietario del directorio en el host, por ejemplo `1000` o `999`, lo que impide el acceso adecuado a los archivos.
 
-**Solución**: ajuste los permisos del directorio en el host con `chmod` o `chown`, o configure el `Dockerfile` para que el proceso se ejecute con un usuario cuyo UID coincida con el propietario del directorio en el host.
+**Solución**  
+Ajuste los permisos del directorio en el host mediante `chmod` o `chown`, o configure el `Dockerfile` para que el proceso se ejecute con un usuario cuyo UID sea compatible con el propietario del directorio montado.
 
-### Variables de entorno que no cargan
+### Variables de entorno que no se cargan correctamente
 
-**Síntoma**: la aplicación muestra errores por variables indefinidas o con valores incorrectos.
+**Síntoma**  
+La aplicación presenta errores por variables no definidas o por valores distintos a los esperados.
 
-**Posibles causas**:
+**Posibles causas**
 
-1. **Archivo `.env` ausente**: Compose no reporta error si `.env` no existe; simplemente no interpola las variables.
-2. **Ubicación incorrecta**: el archivo `.env` debe estar en el mismo directorio que `docker-compose.yml`.
-3. **Error de sintaxis**: espacios alrededor del `=` (`VARIABLE = valor` en lugar de `VARIABLE=valor`) o comillas innecesarias.
-4. **Precedencia**: una variable definida en el shell del usuario puede estar sobreescribiendo el valor del `.env`.
+1. **Archivo `.env` ausente**  
+   Docker Compose no genera un error si el archivo `.env` no existe. En ese caso, simplemente no realiza la interpolación de variables.
 
-**Solución**: ejecute `docker compose config` para ver la configuración resuelta y confirme que los valores son los esperados.
+2. **Ubicación incorrecta**  
+   El archivo `.env` debe ubicarse en el mismo directorio que `docker-compose.yml`, salvo que se configure otro mecanismo de carga.
 
-### Interpolación errónea de variables
+3. **Error de sintaxis**  
+   Espacios alrededor del signo `=` o el uso innecesario de comillas pueden impedir una carga correcta de los valores.
 
-**Síntoma**: la cadena de conexión contiene literales como `${POSTGRES_USER}` en lugar del valor real.
+4. **Precedencia de variables**  
+   Una variable definida en el entorno del usuario puede sobrescribir el valor definido en `.env`.
 
-**Causa**: la variable no está definida en ninguna fuente (ni en `.env`, ni en el shell, ni en `environment`). Compose no sustituye las variables indefinidas.
+**Solución**  
+Ejecute `docker compose config` para inspeccionar la configuración resultante y comprobar que las variables hayan sido resueltas con los valores esperados.
 
-**Solución**: verifique que la variable esté definida en `.env` o en el shell. Puede establecer valores por defecto con la sintaxis `${VARIABLE:-valor_por_defecto}`:
+### Interpolación incorrecta de variables
+
+**Síntoma**  
+La cadena de conexión u otros parámetros contienen literales como `${POSTGRES_USER}` en lugar del valor correspondiente.
+
+**Causa**  
+La variable no se encuentra definida en ninguna de las fuentes disponibles, ya sea en `.env`, en el entorno del shell o en la propia configuración declarativa.
+
+**Solución**  
+Verifique que la variable esté definida correctamente en `.env` o en el entorno del sistema. Cuando resulte conveniente, puede definir un valor por defecto mediante la sintaxis `${VARIABLE:-valor_por_defecto}`.
 
 ```yaml
 environment:
   - POSTGRES_USER=${POSTGRES_USER:-postgres}
 ```
 
-### Confusión entre datos persistentes y configuración temporal
+### Confusión entre datos persistentes y configuración local
 
-**Síntoma**: un desarrollador modifica un archivo de configuración montado por bind mount y espera que el cambio persista al compartir el proyecto con otro miembro del equipo.
+**Síntoma**  
+Un desarrollador modifica un archivo de configuración montado mediante un *bind mount* y asume que ese cambio estará disponible automáticamente para otro integrante del equipo al compartir el proyecto.
 
-**Causa**: los bind mounts reflejan el sistema de archivos local. Si el archivo no está en el repositorio (porque está en `.gitignore` o simplemente no se incluyó), no existirá en la máquina de otro desarrollador.
+**Causa**  
+Los *bind mounts* reflejan directamente el sistema de archivos local. Por tanto, si el archivo modificado no se encuentra versionado en el repositorio, ya sea porque está incluido en `.gitignore` o porque nunca fue incorporado, dicho archivo no existirá en la máquina de otro desarrollador.
 
-**Solución**: distinga entre archivos de configuración que deben versionarse (y que, por tanto, deben estar en el repositorio) y archivos locales específicos de cada desarrollador (que deben documentarse en el `README` o proporcionarse como plantillas).
+**Solución**  
+Es importante distinguir entre archivos de configuración que deben versionarse y archivos locales específicos de cada entorno de desarrollo. Los primeros deben formar parte del repositorio. Los segundos deben documentarse de manera explícita en el `README` o suministrarse mediante archivos plantilla.
 
-### Inconsistencias entre entorno local y contenedor
+### Inconsistencias entre el entorno local y el contenedor
 
-**Síntoma**: la aplicación funciona correctamente al ejecutarla directamente en el host, pero falla dentro del contenedor, o viceversa.
+**Síntoma**  
+La aplicación funciona correctamente al ejecutarse de forma directa en el host, pero falla dentro del contenedor, o presenta el comportamiento inverso.
 
-**Causa**: las variables de entorno, las rutas de archivos o las versiones de dependencias difieren entre el host y el contenedor. Un caso común es tener `DATABASE_URL` apuntando a `localhost:5432` en el host (donde hay un PostgreSQL local) pero necesitar `db:5432` dentro de la red Docker.
+**Causa**  
+Las variables de entorno, las rutas de archivo o las versiones de dependencias no coinciden entre el host y el contenedor. Un caso frecuente ocurre cuando `DATABASE_URL` apunta a `localhost:5432` en el entorno local, donde existe una instancia de PostgreSQL en la máquina anfitriona, mientras que dentro de la red Docker el valor correcto debe ser `db:5432`.
 
-**Solución**: mantenga las configuraciones separadas. Use `.env` para el entorno Docker y variables de entorno del shell o archivos de configuración específicos para ejecución local.
+**Solución**  
+Mantenga separadas las configuraciones de cada contexto de ejecución. Utilice `.env` para la ejecución dentro de Docker y reserve variables de entorno del sistema o archivos de configuración específicos para la ejecución local fuera de contenedores.
 
 ## Buenas prácticas
 
