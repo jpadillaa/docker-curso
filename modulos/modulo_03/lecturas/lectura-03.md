@@ -758,7 +758,7 @@ $ docker volume prune
 
 ## Errores comunes y resolución de problemas
 
-### Pérdida de datos por ausencia de volumen
+### 1. Pérdida de datos por ausencia de volumen
 
 **Síntoma**  
 Al recrear un contenedor de base de datos, los datos desaparecen.
@@ -769,7 +769,7 @@ No se declaró un volumen nombrado, por lo que los datos quedaron almacenados ú
 **Solución**  
 Declare un volumen nombrado en el nivel superior de `docker-compose.yml` y móntelo en la ruta de datos utilizada por el servicio.
 
-### Pérdida accidental de datos por uso de `down -v`
+### 2. Pérdida accidental de datos por uso de `down -v`
 
 **Síntoma**  
 Después de ejecutar `docker compose down -v`, la base de datos aparece vacía.
@@ -780,7 +780,7 @@ El modificador `-v` elimina los volúmenes nombrados asociados al proyecto.
 **Solución**  
 No utilice `-v` salvo que exista la intención explícita de destruir los datos persistentes. Si únicamente desea detener y eliminar los contenedores sin afectar los volúmenes, utilice `docker compose down` sin modificadores adicionales.
 
-### Montaje en una ruta incorrecta
+### 3. Montaje en una ruta incorrecta
 
 **Síntoma**  
 El contenedor inicia, pero la aplicación no encuentra los archivos esperados o la base de datos se comporta como si fuera nueva.
@@ -791,7 +791,7 @@ La ruta de montaje dentro del contenedor no coincide con la ruta en la que el pr
 **Solución**  
 Consulte la documentación oficial de la imagen para verificar la ruta correcta de almacenamiento. En PostgreSQL, la ruta estándar es `/var/lib/postgresql/data`.
 
-### Permisos incorrectos en *bind mounts*
+### 4. Permisos incorrectos en bind mounts
 
 **Síntoma**  
 El contenedor reporta errores de permisos al intentar leer o escribir en un directorio montado.
@@ -802,7 +802,7 @@ El proceso dentro del contenedor puede ejecutarse con un UID distinto al del pro
 **Solución**  
 Ajuste los permisos del directorio en el host mediante `chmod` o `chown`, o configure el `Dockerfile` para que el proceso se ejecute con un usuario cuyo UID sea compatible con el propietario del directorio montado.
 
-### Variables de entorno que no se cargan correctamente
+### 5. Variables de entorno que no se cargan correctamente
 
 **Síntoma**  
 La aplicación presenta errores por variables no definidas o por valores distintos a los esperados.
@@ -824,7 +824,7 @@ La aplicación presenta errores por variables no definidas o por valores distint
 **Solución**  
 Ejecute `docker compose config` para inspeccionar la configuración resultante y comprobar que las variables hayan sido resueltas con los valores esperados.
 
-### Interpolación incorrecta de variables
+### 6. Interpolación incorrecta de variables
 
 **Síntoma**  
 La cadena de conexión u otros parámetros contienen literales como `${POSTGRES_USER}` en lugar del valor correspondiente.
@@ -840,7 +840,7 @@ environment:
   - POSTGRES_USER=${POSTGRES_USER:-postgres}
 ```
 
-### Confusión entre datos persistentes y configuración local
+### 7. Confusión entre datos persistentes y configuración local
 
 **Síntoma**  
 Un desarrollador modifica un archivo de configuración montado mediante un *bind mount* y asume que ese cambio estará disponible automáticamente para otro integrante del equipo al compartir el proyecto.
@@ -851,7 +851,7 @@ Los *bind mounts* reflejan directamente el sistema de archivos local. Por tanto,
 **Solución**  
 Es importante distinguir entre archivos de configuración que deben versionarse y archivos locales específicos de cada entorno de desarrollo. Los primeros deben formar parte del repositorio. Los segundos deben documentarse de manera explícita en el `README` o suministrarse mediante archivos plantilla.
 
-### Inconsistencias entre el entorno local y el contenedor
+### 8. Inconsistencias entre el entorno local y el contenedor
 
 **Síntoma**  
 La aplicación funciona correctamente al ejecutarse de forma directa en el host, pero falla dentro del contenedor, o presenta el comportamiento inverso.
