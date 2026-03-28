@@ -283,10 +283,10 @@ La salida de `inspect` muestra la ubicación física del volumen en el host (gen
 $ docker compose down -v
 ```
 
-Después de este comando, el volumen `pgdata` ya no existe. Al levantar nuevamente con `docker compose up -d`, PostgreSQL inicia con una base de datos vacía.
+Después de ejecutar este comando, el volumen `pgdata` deja de existir. En consecuencia, al iniciar nuevamente el entorno con `docker compose up -d`, PostgreSQL arranca con una base de datos vacía.
 
 > [!CAUTION]
-> Ejecute `docker compose down -v` solo cuando tenga la intención explícita de destruir todos los datos persistentes del proyecto. No lo utilice como sinónimo de "reiniciar la aplicación".
+> Ejecute `docker compose down -v` únicamente cuando exista la intención explícita de eliminar todos los datos persistentes del proyecto. No debe utilizarse como equivalente de reiniciar la aplicación.
 
 ## Bind mounts en Docker Compose
 
@@ -306,11 +306,13 @@ volumes:
   appdata:
 ```
 
-La sintaxis `HOST:CONTENEDOR` indica que la ruta del host se monta en la ruta especificada del contenedor. El sufijo `:ro` establece que el montaje es de solo lectura (*read-only*).
+La sintaxis `HOST:CONTENEDOR` indica que una ruta del sistema anfitrión se monta en una ruta específica dentro del contenedor. Por su parte, el sufijo `:ro` establece que el montaje se realiza en modo de solo lectura, por lo que el contenedor puede acceder al contenido, pero no modificarlo.
 
 ### Caso de uso: desarrollo con recarga en vivo
 
-Uno de los usos más frecuentes de bind mounts es montar el código fuente durante el desarrollo. Esto permite editar archivos en el host y que el contenedor refleje los cambios sin necesidad de reconstruir la imagen.
+Uno de los usos más comunes de los bind mounts consiste en montar el código fuente durante la etapa de desarrollo. Esto permite editar los archivos directamente en el host y observar esos cambios de manera inmediata dentro del contenedor, sin necesidad de reconstruir la imagen en cada modificación.
+
+Esta práctica favorece ciclos de trabajo más ágiles y reduce la fricción durante actividades de implementación, prueba y depuración.
 
 ```yaml
 services:
@@ -322,23 +324,26 @@ services:
       - "8000:8000"
 ```
 
-Con esta configuración, si el framework de la aplicación soporta recarga automática (*hot reload*), cada cambio guardado en el editor se refleja inmediatamente en el contenedor.
+Con esta configuración, si el framework utilizado por la aplicación soporta recarga automática (*hot reload*), cada cambio guardado en el editor se refleja de forma inmediata dentro del contenedor.
 
 ### Riesgos y limitaciones
 
-- **Permisos**: el proceso dentro del contenedor puede ejecutarse con un UID diferente al del usuario del host. Si los permisos del directorio montado no coinciden, el contenedor puede no poder leer o escribir archivos.
-- **Portabilidad**: un bind mount depende de la estructura del sistema de archivos del host. Un directorio que existe en la máquina de un desarrollador puede no existir en la de otro.
-- **Rendimiento**: en macOS y Windows, los bind mounts pueden presentar latencia significativa en operaciones intensivas de I/O debido a la capa de traducción entre el sistema de archivos del host y el del contenedor.
-- **Seguridad**: un bind mount con permisos de escritura permite que el contenedor modifique archivos del host. Un error en la aplicación podría sobrescribir o eliminar archivos fuera del contenedor.
+- **Permisos**. El proceso que se ejecuta dentro del contenedor puede utilizar un UID distinto al del usuario en el host. Si los permisos del directorio montado no son compatibles, el contenedor podría no tener capacidad para leer o escribir archivos.
+
+- **Portabilidad**. Un *bind mount* depende de la estructura del sistema de archivos del host. Un directorio disponible en la máquina de un desarrollador puede no existir en la de otro, lo que reduce la reproducibilidad entre ambientes locales.
+
+- **Rendimiento**. En macOS y Windows, los *bind mounts* pueden introducir latencias apreciables en operaciones intensivas de entrada y salida, debido a la capa de traducción entre el sistema de archivos del host y el del contenedor.
+
+- **Seguridad**. Un *bind mount* con permisos de escritura permite que el contenedor modifique archivos del host. En consecuencia, un error de configuración o de aplicación podría sobrescribir o eliminar archivos fuera del contenedor.
 
 > [!WARNING]
-> No utilice bind mounts como mecanismo principal de persistencia para datos de producción. Los bind mounts son una herramienta de desarrollo que facilita la iteración rápida, pero introducen acoplamiento con el host. Para datos con estado en ambientes controlados, prefiera volúmenes nombrados.
+> No utilice *bind mounts* como mecanismo principal de persistencia para datos de producción. Aunque son especialmente útiles en desarrollo por la rapidez de iteración que ofrecen, también introducen un mayor acoplamiento con el host. Para datos con estado en ambientes controlados, conviene preferir volúmenes nombrados.
 
 ## Configuración con variables de entorno
 
 ### Principio: la imagen no debe contener configuración de ambiente
 
-Una imagen Docker bien diseñada es un artefacto inmutable. La misma imagen se ejecuta en desarrollo, pruebas y producción. Lo que varía es la **configuración inyectada al momento de ejecución**, principalmente a través de variables de entorno.
+Una imagen Docker bien diseñada debe concebirse como un artefacto inmutable. Idealmente, la misma imagen debe poder ejecutarse en desarrollo, pruebas y producción. Lo que cambia entre estos ambientes no es la imagen en sí, sino la **configuración inyectada en el momento de la ejecución**, principalmente mediante variables de entorno.
 
 ### Definición en `docker-compose.yml`
 
