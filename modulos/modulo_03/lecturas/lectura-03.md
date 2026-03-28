@@ -395,7 +395,7 @@ Esta separación permite que `docker-compose.yml` sea un archivo versionable y g
 
 ### Archivos de entorno por servicio
 
-La directiva `env_file` permite cargar variables de entorno desde un archivo específico directamente en el contenedor, sin depender del mecanismo de interpolación de Docker Compose:
+La directiva `env_file` permite cargar variables de entorno desde un archivo específico directamente en el contenedor, sin depender del mecanismo de sustitución de variables o interpolación de Docker Compose:
 
 ```yaml
 services:
@@ -408,7 +408,7 @@ services:
 ```
 
 > [!NOTE]
-> Existe una diferencia importante entre ambos mecanismos. Las variables definidas en `.env` se utilizan para interpolar valores dentro de `docker-compose.yml` durante el procesamiento del archivo. En cambio, las variables cargadas mediante `env_file` se inyectan directamente en el entorno del contenedor y no participan en la interpolación del archivo Compose.
+> Existe una diferencia importante entre ambos mecanismos. Las variables definidas en `.env` se utilizan para interpolar valores dentro de `docker-compose.yml` durante el procesamiento del archivo. En cambio, las variables cargadas mediante `env_file` se inyectan directamente en el entorno del contenedor y no participan en la sustitución de variables del archivo Compose.
 
 ### Verificar variables de entorno en un contenedor
 
@@ -425,7 +425,7 @@ $ docker compose exec app env | grep DATABASE_URL
 Cuando una misma variable se define en más de una fuente, Docker Compose resuelve el valor final siguiendo un orden de precedencia. De mayor a menor prioridad, el orden general es el siguiente.
 
 1. Variables pasadas explícitamente en la línea de comandos, por ejemplo con `docker compose run -e`
-2. Variables declaradas en `environment` o `env_file` cuando su valor proviene de interpolación desde el shell o desde un archivo de entorno cargado por Compose, como `.env` o `--env-file`
+2. Variables declaradas en `environment` o `env_file` cuando su valor proviene de sustitución de variables desde el shell o desde un archivo de entorno cargado por Compose, como `.env` o `--env-file`
 3. Variables definidas directamente en `environment` dentro de `docker-compose.yml`
 4. Variables definidas en archivos referenciados mediante `env_file`
 
@@ -454,7 +454,7 @@ El uso de archivos `.env` puede ser aceptable en entornos de desarrollo. Sin emb
 
 - **No incorpore credenciales en el `Dockerfile`**. Las instrucciones `ENV` y `ARG` con valores sensibles pueden quedar registradas en las capas de la imagen, lo que amplía la superficie de exposición.
 
-- **No incluya credenciales directamente en el `docker-compose.yml` versionado**. Utilice mecanismos de configuración externa, como interpolación desde `.env` o archivos definidos mediante `env_file`.
+- **No incluya credenciales directamente en el `docker-compose.yml` versionado**. Utilice mecanismos de configuración externa, como sustitución de variables desde `.env` o archivos definidos mediante `env_file`.
 
 #### Ejemplo de `.env.example`
 
@@ -737,7 +737,7 @@ $ docker compose exec app env
 # Verificar una variable específica
 $ docker compose exec app env | grep DATABASE_URL
 
-# Ver la configuración resuelta de Compose (útil para depurar interpolación)
+# Ver la configuración resuelta de Compose (útil para depurar la sustitución de variables)
 $ docker compose config
 ```
 
@@ -810,7 +810,7 @@ La aplicación presenta errores por variables no definidas o por valores distint
 **Posibles causas**
 
 1. **Archivo `.env` ausente**  
-   Docker Compose no genera un error si el archivo `.env` no existe. En ese caso, simplemente no realiza la interpolación de variables.
+   Docker Compose no genera un error si el archivo `.env` no existe. En ese caso, simplemente no realiza la sustitución de variables.
 
 2. **Ubicación incorrecta**  
    El archivo `.env` debe ubicarse en el mismo directorio que `docker-compose.yml`, salvo que se configure otro mecanismo de carga.
@@ -824,7 +824,7 @@ La aplicación presenta errores por variables no definidas o por valores distint
 **Solución**  
 Ejecute `docker compose config` para inspeccionar la configuración resultante y comprobar que las variables hayan sido resueltas con los valores esperados.
 
-### 6. Interpolación incorrecta de variables
+### 6. Sustitución incorrecta de variables
 
 **Síntoma**  
 La cadena de conexión u otros parámetros contienen literales como `${POSTGRES_USER}` en lugar del valor correspondiente.
