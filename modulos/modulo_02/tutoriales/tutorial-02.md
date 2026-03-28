@@ -211,7 +211,7 @@ http://localhost:8080
 
 Debería ver la interfaz de la aplicación **Grocery List App**.
 
-![GroceryList App](modulos/modulo_02/assets/grocery-list-app-screenshot.png)
+![GroceryList App](../assets/grocery-list-app-screenshot.png)
 
 #### Paso 4.2: Probar la aplicación
 
