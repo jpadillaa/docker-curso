@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Tutorial 01 - Instalación de Docker
 
 > **Objetivo:** Correcta instalación y verificación de Docker, asegurando que el entorno quede listo para ejecutar contenedores y desplegar aplicaciones completas con un solo comando.
