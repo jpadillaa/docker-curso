@@ -120,9 +120,9 @@ La naturaleza efímera de los contenedores no constituye una limitación del mod
 
 La implicación de este enfoque es clara. Todo dato que deba sobrevivir al ciclo de vida del contenedor requiere una estrategia explícita de persistencia.
 
-## Persistencia en Docker con volúmenes y *bind mounts*
+## Persistencia en Docker con volúmenes y bind mounts
 
-Docker ofrece dos mecanismos principales para persistir datos por fuera de la capa de escritura del contenedor, los **volúmenes nombrados** (*named volumes*) y los **bind mounts**. Ambos permiten desacoplar el almacenamiento del ciclo de vida del contenedor, aunque responden a necesidades distintas y presentan implicaciones operativas diferentes.
+Docker ofrece dos mecanismos principales para persistir datos por fuera de la capa de escritura del contenedor, los **volúmenes nombrados** (*named volumes*) y los bind mounts. Ambos permiten desacoplar el almacenamiento del ciclo de vida del contenedor, aunque responden a necesidades distintas y presentan implicaciones operativas diferentes.
 
 ### Volúmenes nombrados
 
@@ -332,12 +332,12 @@ Con esta configuración, si el framework utilizado por la aplicación soporta re
 
 - **Portabilidad**. Un *bind mount* depende de la estructura del sistema de archivos del host. Un directorio disponible en la máquina de un desarrollador puede no existir en la de otro, lo que reduce la reproducibilidad entre ambientes locales.
 
-- **Rendimiento**. En macOS y Windows, los *bind mounts* pueden introducir latencias apreciables en operaciones intensivas de entrada y salida, debido a la capa de traducción entre el sistema de archivos del host y el del contenedor.
+- **Rendimiento**. En macOS y Windows, los bind mounts pueden introducir latencias apreciables en operaciones intensivas de entrada y salida, debido a la capa de traducción entre el sistema de archivos del host y el del contenedor.
 
 - **Seguridad**. Un *bind mount* con permisos de escritura permite que el contenedor modifique archivos del host. En consecuencia, un error de configuración o de aplicación podría sobrescribir o eliminar archivos fuera del contenedor.
 
 > [!WARNING]
-> No utilice *bind mounts* como mecanismo principal de persistencia para datos de producción. Aunque son especialmente útiles en desarrollo por la rapidez de iteración que ofrecen, también introducen un mayor acoplamiento con el host. Para datos con estado en ambientes controlados, conviene preferir volúmenes nombrados.
+> No utilice bind mounts como mecanismo principal de persistencia para datos de producción. Aunque son especialmente útiles en desarrollo por la rapidez de iteración que ofrecen, también introducen un mayor acoplamiento con el host. Para datos con estado en ambientes controlados, conviene preferir volúmenes nombrados.
 
 ## Configuración con variables de entorno
 
@@ -846,7 +846,7 @@ environment:
 Un desarrollador modifica un archivo de configuración montado mediante un *bind mount* y asume que ese cambio estará disponible automáticamente para otro integrante del equipo al compartir el proyecto.
 
 **Causa**  
-Los *bind mounts* reflejan directamente el sistema de archivos local. Por tanto, si el archivo modificado no se encuentra versionado en el repositorio, ya sea porque está incluido en `.gitignore` o porque nunca fue incorporado, dicho archivo no existirá en la máquina de otro desarrollador.
+Los bind mounts reflejan directamente el sistema de archivos local. Por tanto, si el archivo modificado no se encuentra versionado en el repositorio, ya sea porque está incluido en `.gitignore` o porque nunca fue incorporado, dicho archivo no existirá en la máquina de otro desarrollador.
 
 **Solución**  
 Es importante distinguir entre archivos de configuración que deben versionarse y archivos locales específicos de cada entorno de desarrollo. Los primeros deben formar parte del repositorio. Los segundos deben documentarse de manera explícita en el `README` o suministrarse mediante archivos plantilla.
@@ -868,7 +868,7 @@ Mantenga separadas las configuraciones de cada contexto de ejecución. Utilice `
 
 - **Utilizar volúmenes nombrados para datos con estado**. Todo servicio que almacene información persistente debe declarar un volumen nombrado en `docker-compose.yml`. No es adecuado depender de la capa de escritura del contenedor para conservar datos relevantes.
 
-- **Usar *bind mounts* con criterio, principalmente en desarrollo**. Este mecanismo resulta útil para ciclos rápidos de edición y prueba. Sin embargo, no debe asumirse como la estrategia principal de persistencia en ambientes controlados o de producción.
+- **Usar bind mounts con criterio, principalmente en desarrollo**. Este mecanismo resulta útil para ciclos rápidos de edición y prueba. Sin embargo, no debe asumirse como la estrategia principal de persistencia en ambientes controlados o de producción.
 
 - **No incorporar credenciales en el `Dockerfile` ni en el repositorio**. Las instrucciones `ENV` con valores sensibles quedan registradas en las capas de la imagen. En entornos de desarrollo conviene emplear archivos `.env` y excluirlos mediante `.gitignore`.
 
