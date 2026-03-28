@@ -1,3 +1,5 @@
+![Banner del proyecto](/modulos/assets/Banner.png)
+
 # Tutorial 02 - Docker en acción
 
 > **Objetivo:** Demostrar el potencial de los contenedores Docker ejecutando aplicaciones completas con un solo comando.
