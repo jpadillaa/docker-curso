@@ -56,7 +56,7 @@ persist-tutorial/
 ├── nginx/
 │   └── default.conf
 ├── Dockerfile.api
-├── compose.yml
+├── docker-compose.yml
 ├── .env
 └── .env.example
 ```
@@ -222,7 +222,7 @@ EOF
 ## 6. Definir la aplicación con Docker Compose
 
 ```bash
-cat > compose.yml << 'EOF'
+cat > docker-compose.yml << 'EOF'
 services:
   web:
     image: nginx:alpine
@@ -394,7 +394,7 @@ docker compose exec api python -c "import socket; print('db resuelve a:', socket
 ```
 
 > [!NOTE]
-> Este aislamiento es un efecto directo de la topología de redes definida en `compose.yml`. No requiere reglas de firewall adicionales: basta con no compartir la red.
+> Este aislamiento es un efecto directo de la topología de redes definida en `docker-compose.yml`. No requiere reglas de firewall adicionales: basta con no compartir la red.
 
 ## 10. Verificar la persistencia
 
@@ -500,10 +500,10 @@ Esta sección presenta fallos deliberados para practicar el proceso de diagnóst
 
 ### Fallo 1: uso incorrecto de `localhost`
 
-**Introducir el error**: modifique temporalmente la variable `DATABASE_URL` en `compose.yml` para usar `localhost` en lugar de `db`:
+**Introducir el error**: modifique temporalmente la variable `DATABASE_URL` en `docker-compose.yml` para usar `localhost` en lugar de `db`:
 
 ```bash
-sed -i 's/@db:5432/@localhost:5432/' compose.yml
+sed -i 's/@db:5432/@localhost:5432/' docker-compose.yml
 docker compose up -d
 ```
 
@@ -528,7 +528,7 @@ Busque un mensaje como `Connection refused` apuntando a `localhost:5432`.
 **Corregir**:
 
 ```bash
-sed -i 's/@localhost:5432/@db:5432/' compose.yml
+sed -i 's/@localhost:5432/@db:5432/' docker-compose.yml
 docker compose up -d
 ```
 
@@ -577,7 +577,7 @@ docker compose up -d
 **Introducir el error**: modifique temporalmente la ruta del volumen de `db`:
 
 ```bash
-sed -i 's|pgdata:/var/lib/postgresql/data|pgdata:/var/lib/postgres/data|' compose.yml
+sed -i 's|pgdata:/var/lib/postgresql/data|pgdata:/var/lib/postgres/data|' docker-compose.yml
 docker compose down -v
 docker compose up -d
 ```
@@ -607,7 +607,7 @@ La ruta montada es `/var/lib/postgres/data`, pero PostgreSQL almacena sus datos 
 **Corregir**:
 
 ```bash
-sed -i 's|pgdata:/var/lib/postgres/data|pgdata:/var/lib/postgresql/data|' compose.yml
+sed -i 's|pgdata:/var/lib/postgres/data|pgdata:/var/lib/postgresql/data|' docker-compose.yml
 docker compose down -v
 docker compose up -d
 ```
@@ -622,7 +622,7 @@ docker compose up -d
 ```bash
 cat > /tmp/patch.py << 'PYEOF'
 import re
-with open("compose.yml") as f:
+with open("docker-compose.yml") as f:
     content = f.read()
 # Remove backend from api's networks
 content = content.replace(
@@ -630,7 +630,7 @@ content = content.replace(
     "    networks:\n      - frontend\n",
     1  # only first occurrence (api)
 )
-with open("compose.yml", "w") as f:
+with open("docker-compose.yml", "w") as f:
     f.write(content)
 PYEOF
 python3 /tmp/patch.py
@@ -655,17 +655,17 @@ docker compose exec api python -c "import socket; socket.gethostbyname('db')" 2>
 
 La resolución falla porque `api` y `db` ya no comparten una red. Sin red compartida, el DNS interno de Docker no resuelve el nombre.
 
-**Corregir**: restaure la red `backend` en la sección de `api` dentro de `compose.yml` y recree:
+**Corregir**: restaure la red `backend` en la sección de `api` dentro de `docker-compose.yml` y recree:
 
 ```bash
-# Restaurar compose.yml original (reescriba la sección networks de api)
+# Restaurar docker-compose.yml original (reescriba la sección networks de api)
 # Asegúrese de que api tenga:
 #   networks:
 #     - frontend
 #     - backend
 ```
 
-Recree el archivo `compose.yml` desde el paso 6 si es necesario, y levante nuevamente:
+Recree el archivo `docker-compose.yml` desde el paso 6 si es necesario, y levante nuevamente:
 
 ```bash
 docker compose up -d
@@ -721,12 +721,12 @@ Verifique la ruta de montaje del volumen. La ruta correcta para PostgreSQL es `/
 Verifique que:
 
 1. `FLASK_DEBUG=1` esté definido en `.env`
-2. El bind mount `./api:/app` esté presente en `compose.yml`
+2. El bind mount `./api:/app` esté presente en `docker-compose.yml`
 3. El archivo editado sea exactamente `api/main.py` (la ruta relativa al directorio del proyecto)
 
 ### `docker compose config` muestra variables vacías
 
-El archivo `.env` no existe o no está en el mismo directorio que `compose.yml`. Verifique:
+El archivo `.env` no existe o no está en el mismo directorio que `docker-compose.yml`. Verifique:
 
 ```bash
 ls -la .env
