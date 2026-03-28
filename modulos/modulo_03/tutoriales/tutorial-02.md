@@ -1,6 +1,6 @@
 ![Banner del proyecto](/modulos/assets/Banner.png)
 
-# Tutorial 03 - Persistencia, configuración y diagnóstico en aplicaciones compuestas
+# Tutorial 02 - Persistencia, configuración y diagnóstico en aplicaciones compuestas
 
 > **Objetivo:** Configurar una aplicación multicontenedor con segmentación de redes, persistencia explícita con volúmenes y bind mounts, inyección de configuración por variables de entorno, y aplicar una estrategia sistemática de diagnóstico ante fallos inducidos deliberadamente.
 
