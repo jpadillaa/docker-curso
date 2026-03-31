@@ -2,21 +2,22 @@
 
 # Tutorial 01 - Aplicación multicontenedor con Docker Compose
 
-> **Objetivo:** Construir, levantar y operar una aplicación compuesta por tres servicios (aplicación web, base de datos y herramienta de administración) usando Docker Compose. Al finalizar, el estudiante habrá definido un archivo `docker-compose.yml`, verificado la comunicación entre servicios por nombre, inspeccionado la topología de red y validado el ciclo de vida completo de la aplicación.
+> **Objetivo.** Construir, levantar y operar una aplicación compuesta por tres servicios, una aplicación web, una base de datos y una herramienta de administración, mediante Docker Compose. Al finalizar, el estudiante habrá definido un archivo `docker-compose.yml`, verificado la comunicación entre servicios por nombre, inspeccionado la topología de red y validado el ciclo de vida completo de la aplicación.
 
-Este tutorial asume que Docker y Docker Compose están instalados y operativos. Si no ha completado la instalación, consulte el Tutorial 01.
+Este tutorial asume que Docker y Docker Compose están instalados y operativos. Si aún no ha completado la instalación, consulte el Tutorial 01.
 
 ## Contexto
 
-Hasta este punto del curso, los contenedores se han ejecutado de forma individual con `docker run`. Este tutorial introduce el paso hacia aplicaciones compuestas por múltiples servicios que colaboran entre sí, definidos y operados de forma declarativa con Docker Compose.
+Hasta este punto del curso, los contenedores se han ejecutado de forma individual mediante `docker run`. Este tutorial introduce el paso hacia aplicaciones compuestas por múltiples servicios que colaboran entre sí y que se definen y operan de manera declarativa con Docker Compose.
 
-La aplicación que se construirá registra y consulta marcadores (bookmarks) a través de una API REST. Su arquitectura involucra tres servicios:
+La aplicación que se construirá permite registrar y consultar marcadores (*bookmarks*) a través de una API REST. Su arquitectura involucra tres servicios:
 
-| Servicio | Imagen / Build | Función |
-|----------|---------------|---------|
-| `api` | Imagen construida desde Dockerfile (Flask) | Recibe peticiones HTTP y opera sobre la base de datos |
-| `db` | `postgres:16` | Almacena los datos de la aplicación |
-| `adminer` | `adminer` | Interfaz web para inspeccionar la base de datos |
+| Servicio  | Imagen o construcción                                   | Función                                                         |
+| --------- | ------------------------------------------------------- | --------------------------------------------------------------- |
+| `api`     | Imagen construida a partir de un `Dockerfile` con Flask | Recibe solicitudes HTTP y opera sobre la base de datos          |
+| `db`      | `postgres:16`                                           | Almacena los datos de la aplicación                             |
+| `adminer` | `adminer`                                               | Proporciona una interfaz web para inspeccionar la base de datos |
+
 
 ## 1. Crear la estructura del proyecto
 
@@ -46,10 +47,8 @@ compose-tutorial/
 Cree `api/requirements.txt` con las dependencias de Python:
 
 ```bash
-cat > api/requirements.txt << 'EOF'
 flask==3.1.*
 psycopg2-binary==2.9.*
-EOF
 ```
 
 ### 2.2. Código de la API
@@ -57,7 +56,6 @@ EOF
 Cree `api/main.py`. Esta aplicación Flask expone dos endpoints: uno para crear marcadores y otro para listarlos.
 
 ```bash
-cat > api/main.py << 'PYEOF'
 import os
 import psycopg2
 from flask import Flask, request, jsonify
@@ -121,18 +119,16 @@ def crear():
 if __name__ == "__main__":
     init_db()
     app.run(host="0.0.0.0", port=5000)
-PYEOF
 ```
 
 > [!NOTE]
-> La cadena de conexión a la base de datos proviene de la variable de entorno `DATABASE_URL`. No está hardcodeada en el código. Esto permite que la misma imagen funcione en diferentes ambientes con distintas configuraciones.
+> La cadena de conexión a la base de datos se obtiene de la variable de entorno `DATABASE_URL`. No está definida de forma fija en el código. Esto permite que una misma imagen funcione en distintos ambientes con configuraciones diferentes.
 
 ## 3. Escribir el Dockerfile
 
 El Dockerfile define cómo se construye la imagen del servicio `api`:
 
 ```bash
-cat > Dockerfile << 'EOF'
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -145,41 +141,37 @@ COPY api/ .
 EXPOSE 5000
 
 CMD ["python", "main.py"]
-EOF
 ```
 
-Cada instrucción tiene un propósito:
+Cada instrucción cumple una función específica:
 
-| Instrucción | Función |
-|-------------|---------|
-| `FROM python:3.12-slim` | Imagen base ligera con Python 3.12 |
-| `WORKDIR /app` | Establece el directorio de trabajo |
-| `COPY ... requirements.txt` + `RUN pip install` | Instala dependencias antes de copiar el código (aprovecha la caché de capas) |
-| `COPY api/ .` | Copia el código de la aplicación |
-| `EXPOSE 5000` | Documenta el puerto que usa la aplicación |
-| `CMD` | Define el proceso principal del contenedor |
+| Instrucción                                     | Función                                                                          |
+| ----------------------------------------------- | -------------------------------------------------------------------------------- |
+| `FROM python:3.12-slim`                         | Define una imagen base ligera con Python 3.12                                    |
+| `WORKDIR /app`                                  | Establece el directorio de trabajo                                               |
+| `COPY ... requirements.txt` + `RUN pip install` | Instala las dependencias antes de copiar el código y aprovecha la caché de capas |
+| `COPY api/ .`                                   | Copia el código de la aplicación                                                 |
+| `EXPOSE 5000`                                   | Documenta el puerto que utiliza la aplicación                                    |
+| `CMD`                                           | Define el proceso principal del contenedor                                       |
 
 ## 4. Crear el archivo de variables de entorno
 
-El archivo `.env` centraliza la configuración de credenciales y parámetros que se interpolan en `docker-compose.yml`:
+El archivo `.env` centraliza la configuración de credenciales y parámetros que luego se usan en `docker-compose.yml`:
 
 ```bash
-cat > .env << 'EOF'
 POSTGRES_USER=bookmarks_user
 POSTGRES_PASSWORD=tutorial_pwd_2026
 POSTGRES_DB=bookmarksdb
-EOF
 ```
 
 > [!CAUTION]
-> En un proyecto real, el archivo `.env` debe incluirse en `.gitignore` para evitar que las credenciales se publiquen en el repositorio. En este tutorial se crea directamente con fines didácticos.
+> En un proyecto real, el archivo `.env` debe incluirse en `.gitignore` para evitar la publicación de credenciales en el repositorio. En este tutorial, se crea directamente con fines didácticos.
 
 ## 5. Definir la aplicación con Docker Compose
 
-Cree el archivo `docker-compose.yml`. Este archivo describe los tres servicios, sus relaciones, la red y el volumen persistente:
+Cree el archivo `docker-compose.yml`. Este archivo define los tres servicios, sus relaciones, la red y el volumen persistente:
 
 ```bash
-cat > docker-compose.yml << 'EOF'
 services:
   api:
     build: .
@@ -217,29 +209,27 @@ services:
 
 volumes:
   pgdata:
-EOF
 ```
 
-Antes de levantar, valide que la configuración se parsea correctamente y que las variables se interpolan:
+Antes de levantar la aplicación, valide que la configuración se procese correctamente y que las variables se reemplacen con los valores esperados:
 
 ```bash
 docker compose config
 ```
-
-Revise en la salida que `DATABASE_URL` contenga los valores reales de `.env`, no los literales `${...}`.
+Revise en la salida que `DATABASE_URL` contenga los valores definidos en `.env` y no los literales `${...}`.
 
 ### Análisis del archivo Compose
 
 Observe los siguientes aspectos:
 
-- **`api`** construye su imagen con `build: .` y publica el puerto 5000. Su variable `DATABASE_URL` usa `@db:5432`, donde `db` es el nombre del servicio de base de datos, no una IP.
-- **`db`** usa la imagen oficial de PostgreSQL. Incluye un `healthcheck` que ejecuta `pg_isready` para verificar que el motor esté operativo antes de que `api` intente conectarse.
-- **`adminer`** publica el puerto 8080 para acceso desde el navegador.
-- **`pgdata`** es un volumen nombrado que persiste los datos de PostgreSQL.
-- No se declara una sección `networks`. Compose crea automáticamente una red bridge para el proyecto.
+* **`api`** construye su imagen con `build: .` y publica el puerto 5000. La variable `DATABASE_URL` usa `@db:5432`, donde `db` es el nombre del servicio de base de datos y no una dirección IP.
+* **`db`** usa la imagen oficial de PostgreSQL. Incluye un `healthcheck` que ejecuta `pg_isready` para verificar que el motor esté operativo antes de que `api` intente conectarse.
+* **`adminer`** publica el puerto 8080 para permitir el acceso desde el navegador.
+* **`pgdata`** es un volumen con nombre que persiste los datos de PostgreSQL.
+* No se declara una sección `networks`. Compose crea automáticamente una red `bridge` para el proyecto.
 
 > [!IMPORTANT]
-> La directiva `depends_on` con `condition: service_healthy` garantiza que `api` no se inicie hasta que PostgreSQL esté realmente aceptando conexiones. Sin esta condición, `api` podría fallar al intentar conectarse durante la inicialización de la base de datos.
+> La directiva `depends_on` con `condition: service_healthy` garantiza que `api` no se inicie hasta que PostgreSQL realmente esté aceptando conexiones. Sin esta condición, `api` podría fallar al intentar conectarse durante la inicialización de la base de datos.
 
 ## 6. Levantar la aplicación
 
@@ -247,15 +237,15 @@ Observe los siguientes aspectos:
 docker compose up -d
 ```
 
-Este comando:
+Este comando realiza las siguientes acciones:
 
-1. Lee `docker-compose.yml` y `.env`
-2. Construye la imagen de `api` a partir del `Dockerfile`
-3. Descarga `postgres:16` y `adminer` si no están disponibles localmente
-4. Crea la red del proyecto
-5. Crea el volumen `pgdata`
-6. Inicia `db` y espera a que su healthcheck sea exitoso
-7. Inicia `api` y `adminer`
+1. Lee los archivos `docker-compose.yml` y `.env`.
+2. Construye la imagen de `api` a partir del `Dockerfile`.
+3. Descarga `postgres:16` y `adminer` si no están disponibles localmente.
+4. Crea la red del proyecto.
+5. Crea el volumen `pgdata`.
+6. Inicia `db` y espera a que su *healthcheck* sea exitoso.
+7. Inicia `api` y `adminer`.
 
 ## 7. Verificar el estado de los servicios
 
@@ -263,7 +253,7 @@ Este comando:
 docker compose ps
 ```
 
-Verifique que los tres servicios aparezcan con estado `running` (y `db` con `healthy`):
+Verifique que los tres servicios aparezcan en estado `running` y que `db` figure además como `healthy`:
 
 ```plaintext
 NAME                        SERVICE   STATUS            PORTS
@@ -273,7 +263,7 @@ compose-tutorial-adminer-1  adminer   running           0.0.0.0:8080->8080/tcp
 ```
 
 > [!WARNING]
-> Si algún servicio aparece como `exited` o `restarting`, consulte los logs antes de continuar: `docker compose logs <servicio>`.
+> Si algún servicio aparece en estado `exited` o `restarting`, revise los logs antes de continuar con `docker compose logs <servicio>`.
 
 ## 8. Probar la aplicación
 
@@ -323,18 +313,18 @@ Verifique que la respuesta incluya ambos marcadores.
 
 ### 8.5. Inspeccionar desde Adminer
 
-Abra `http://localhost:8080` en un navegador. Complete los campos de conexión:
+Abra `http://localhost:8080` en un navegador y complete los campos de conexión:
 
-| Campo | Valor |
-|-------|-------|
-| Sistema | PostgreSQL |
-| Servidor | `db` |
-| Usuario | `bookmarks_user` |
-| Contraseña | `tutorial_pwd_2026` |
-| Base de datos | `bookmarksdb` |
+| Campo         | Valor               |
+| ------------- | ------------------- |
+| Sistema       | PostgreSQL          |
+| Servidor      | `db`                |
+| Usuario       | `bookmarks_user`    |
+| Contraseña    | `tutorial_pwd_2026` |
+| Base de datos | `bookmarksdb`       |
 
 > [!NOTE]
-> En Adminer, el servidor es `db` (el nombre del servicio), no `localhost`. Adminer se ejecuta dentro de la red Docker y alcanza a PostgreSQL por nombre de servicio.
+> En Adminer, el servidor es `db`, es decir, el nombre del servicio, no `localhost`. Adminer se ejecuta dentro de la red Docker y se conecta a PostgreSQL mediante ese nombre.
 
 Navegue hasta la tabla `bookmarks` y confirme que los registros creados con `curl` aparecen en la base de datos.
 
@@ -346,7 +336,7 @@ Navegue hasta la tabla `bookmarks` y confirme que los registros creados con `cur
 docker network ls | grep compose-tutorial
 ```
 
-Observe la red creada automáticamente por Compose (nombrada `compose-tutorial_default`).
+Observe la red que Compose crea automáticamente, llamada `compose-tutorial_default`.
 
 ### 9.2. Inspeccionar la red
 
@@ -354,17 +344,17 @@ Observe la red creada automáticamente por Compose (nombrada `compose-tutorial_d
 docker network inspect compose-tutorial_default
 ```
 
-En la sección `Containers` de la salida, identifique los tres contenedores conectados. Cada uno tiene una IP asignada dentro del rango de la red.
+En la sección `Containers` de la salida, identifique los tres contenedores conectados. Cada uno tiene una dirección IP asignada dentro del rango de la red.
 
 ### 9.3. Verificar resolución DNS entre servicios
 
-Desde el contenedor de `api`, confirme que el nombre `db` resuelve a una dirección IP:
+Desde el contenedor de `api`, confirme que el nombre `db` se resuelve a una dirección IP:
 
 ```bash
 docker compose exec api python -c "import socket; print(socket.gethostbyname('db'))"
 ```
 
-El resultado debe ser una IP interna (por ejemplo, `172.18.0.2`). Esta resolución la provee el DNS interno de Docker, que asocia automáticamente el nombre del servicio con la IP del contenedor correspondiente.
+El resultado debe ser una dirección IP interna, por ejemplo, `172.18.0.2`. Esta resolución la proporciona el DNS interno de Docker, que asocia automáticamente el nombre del servicio con la dirección IP del contenedor correspondiente.
 
 ### 9.4. Verificar que la comunicación funciona por nombre
 
@@ -381,13 +371,13 @@ s.close()
 
 ### 9.5. Verificar que la base de datos no está expuesta al host
 
-Observe que `db` no tiene la directiva `ports` en `docker-compose.yml`. Confirme que no es accesible directamente desde el host:
+Observe que `db` no incluye la directiva `ports` en `docker-compose.yml`. Confirme que no es accesible directamente desde el host:
 
 ```bash
 curl -s --max-time 3 http://localhost:5432 || echo "No accesible desde el host (esperado)"
 ```
 
-Este comportamiento es correcto: la base de datos solo es accesible desde la red interna de Docker.
+Este comportamiento es correcto. La base de datos solo es accesible desde la red interna de Docker.
 
 ## 10. Inspeccionar logs
 
@@ -477,7 +467,7 @@ docker volume ls | grep pgdata
 El volumen ya no debe aparecer.
 
 > [!CAUTION]
-> El flag `-v` elimina los volúmenes nombrados del proyecto. Los datos almacenados en PostgreSQL se pierden de forma irrecuperable. Use este comando únicamente cuando desee un reinicio completo del estado.
+> La opción `-v` elimina los volúmenes nombrados del proyecto. Los datos almacenados en PostgreSQL se pierden de forma irreversible. Use este comando solo cuando desee reiniciar completamente el estado.
 
 ## Solución de problemas frecuentes
 
@@ -491,13 +481,13 @@ docker compose logs api
 
 Las causas más comunes son:
 
-- `DATABASE_URL` no definida o mal formada. Verifique `.env` y ejecute `docker compose config`.
-- La cadena de conexión usa `localhost` en lugar de `db`. Corrija a `@db:5432`.
-- Las credenciales de `.env` no coinciden entre `api` y `db`.
+* `DATABASE_URL` no está definida o está mal formada. Verifique el archivo `.env` y ejecute `docker compose config`.
+* La cadena de conexión usa `localhost` en lugar de `db`. Corríjala a `@db:5432`.
+* Las credenciales definidas en `.env` no coinciden entre `api` y `db`.
 
 ### Adminer no puede conectarse a la base de datos
 
-Verifique que en el campo **Servidor** escribió `db`, no `localhost`. Adminer opera dentro de la red Docker y debe usar el nombre del servicio.
+Verifique que en el campo **Servidor** haya escrito `db` y no `localhost`. Adminer se ejecuta dentro de la red Docker y debe usar el nombre del servicio.
 
 ### Puerto 5000 o 8080 ya ocupado
 
@@ -519,7 +509,7 @@ ports:
 docker compose config
 ```
 
-Si hay errores de parseo, Compose los reporta con la línea y columna del problema. Verifique que la indentación use espacios (no tabulaciones) y que la estructura YAML sea válida.
+Si hay errores de parseo, Compose los reporta indicando la línea y la columna donde se encuentra el problema. Verifique que la indentación use espacios, no tabulaciones, y que la estructura YAML sea válida.
 
 ## Referencias
 
