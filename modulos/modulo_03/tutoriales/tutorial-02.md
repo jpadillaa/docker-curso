@@ -66,16 +66,13 @@ persist-tutorial/
 ### 2.1. Dependencias
 
 ```bash
-cat > api/requirements.txt << 'EOF'
 flask==3.1.*
 psycopg2-binary==2.9.*
-EOF
 ```
 
 ### 2.2. Código de la API
 
 ```bash
-cat > api/main.py << 'PYEOF'
 import os
 import psycopg2
 from flask import Flask, request, jsonify
@@ -139,7 +136,6 @@ if __name__ == "__main__":
     init_db()
     debug_mode = os.environ.get("FLASK_DEBUG", "0") == "1"
     app.run(host="0.0.0.0", port=5000, debug=debug_mode)
-PYEOF
 ```
 
 > [!NOTE]
@@ -150,7 +146,6 @@ PYEOF
 Nginx actúa como punto de entrada público y redirige las peticiones `/api/*` al servicio `api`:
 
 ```bash
-cat > nginx/default.conf << 'EOF'
 server {
     listen 80;
 
@@ -165,7 +160,6 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
     }
 }
-EOF
 ```
 
 Observe que `proxy_pass` usa `http://api:5000`. Nginx resuelve `api` a la IP del contenedor correspondiente mediante el DNS interno de Docker.
@@ -173,7 +167,6 @@ Observe que `proxy_pass` usa `http://api:5000`. Nginx resuelve `api` a la IP del
 ## 4. Escribir el Dockerfile
 
 ```bash
-cat > Dockerfile.api << 'EOF'
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -186,7 +179,6 @@ COPY api/ .
 EXPOSE 5000
 
 CMD ["python", "main.py"]
-EOF
 ```
 
 ## 5. Crear los archivos de configuración
@@ -194,26 +186,22 @@ EOF
 ### 5.1. Archivo `.env`
 
 ```bash
-cat > .env << 'EOF'
 POSTGRES_USER=tasks_user
 POSTGRES_PASSWORD=persist_pwd_2026
 POSTGRES_DB=tasksdb
 FLASK_DEBUG=1
-EOF
 ```
 
 ### 5.2. Archivo `.env.example`
 
-Este archivo sirve como plantilla para otros desarrolladores. No contiene valores reales:
+El archivo .env.example sirve como plantilla para otros desarrolladores. No contiene valores reales:
 
 ```bash
-cat > .env.example << 'EOF'
 # Copie este archivo como .env y complete los valores
 POSTGRES_USER=
 POSTGRES_PASSWORD=
 POSTGRES_DB=
 FLASK_DEBUG=0
-EOF
 ```
 
 > [!TIP]
@@ -222,7 +210,6 @@ EOF
 ## 6. Definir la aplicación con Docker Compose
 
 ```bash
-cat > docker-compose.yml << 'EOF'
 services:
   web:
     image: nginx:alpine
@@ -273,7 +260,6 @@ volumes:
 networks:
   frontend:
   backend:
-EOF
 ```
 
 ### Análisis de las decisiones de diseño
