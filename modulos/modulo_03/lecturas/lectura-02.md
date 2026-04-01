@@ -537,7 +537,7 @@ docker inspect <nombre-contenedor> \
 
 ## Errores comunes y troubleshooting
 
-### 1. Uso incorrecto de `localhost`
+### Problema 1: Uso incorrecto de `localhost`
 
 **Síntoma**  
 Aparece un error como `Connection refused` al intentar conectarse a otro servicio mediante `localhost`.
@@ -548,7 +548,7 @@ Dentro de un contenedor, `localhost` hace referencia exclusivamente al propio co
 **Solución**  
 Sustituya `localhost` por el nombre del servicio en la cadena de conexión.
 
-### 2. Publicación innecesaria de puertos
+### Problema 2: Publicación innecesaria de puertos
 
 **Síntoma**  
 La base de datos queda accesible desde el host sin requerirlo o se presentan colisiones de puertos.
@@ -559,7 +559,7 @@ Se ha publicado un puerto, por ejemplo `5432:5432`, en un servicio que no necesi
 **Solución**  
 Elimine la directiva `ports` en aquellos servicios que solo deban ser consumidos por otros contenedores. La comunicación interna entre servicios no requiere publicación de puertos.
 
-### 3. Asumir que publicar un puerto habilita comunicación interna
+### Problema 3: Asumir que publicar un puerto habilita comunicación interna
 
 **Síntoma**  
 Un contenedor no logra conectarse a otro, aunque el servicio de destino tenga puertos publicados.
@@ -570,7 +570,7 @@ La publicación de puertos habilita acceso desde el host, no garantiza conectivi
 **Solución**  
 Verifique que ambos servicios estén conectados a una misma red de Docker.
 
-### 4. Servicios sin red compartida
+### Problema 4: Servicios sin red compartida
 
 **Síntoma**  
 Un servicio no logra resolver el nombre de otro servicio.
@@ -581,7 +581,7 @@ En una configuración con redes explícitas, los servicios que deben comunicarse
 **Solución**  
 Revise la sección `networks` de cada servicio y confirme que los componentes que requieren comunicarse estén conectados a una red común.
 
-### 5. Nombre de servicio incorrecto
+### Problema 5: Nombre de servicio incorrecto
 
 **Síntoma**  
 Se presentan errores de resolución DNS, como `Name does not resolve`, o fallos de conexión.
@@ -592,7 +592,7 @@ La cadena de conexión utiliza un nombre que no coincide con la clave definida p
 **Solución**  
 Verifique que el nombre utilizado en la cadena de conexión coincida exactamente con la clave del servicio en la sección `services`.
 
-### 6. Colisión de puertos en el host
+### Problema 6: Colisión de puertos en el host
 
 **Síntoma**
 
@@ -613,7 +613,7 @@ ports:
   - "8080:80"   # usar 8080 en el host en lugar de 80
 ```
 
-### 7. Servicio que inicia, pero aún no está disponible
+### Problema 7: Servicio que inicia, pero aún no está disponible
 
 **Síntoma**  
 La aplicación presenta fallos intermitentes al conectarse a la base de datos durante el arranque y solo logra funcionar correctamente después de un reinicio manual.
@@ -624,7 +624,7 @@ El contenedor de base de datos ha sido iniciado, pero el motor aún se encuentra
 **Solución**  
 Se recomienda utilizar `depends_on` junto con `condition: service_healthy` y definir un `healthcheck` en el servicio de base de datos. Como complemento, o en su defecto, también conviene implementar lógica de reintentos en la aplicación para manejar de forma más robusta la disponibilidad inicial de dependencias externas.
 
-### 8. Dependencia de direcciones IP efímeras
+### Problema 8: Dependencia de direcciones IP efímeras
 
 **Síntoma**  
 La aplicación funciona inicialmente, pero pierde conectividad después de recrear los contenedores.
