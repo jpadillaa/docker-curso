@@ -1,6 +1,6 @@
 ![Banner del proyecto](/modulos/assets/Banner.png)
 
-# Lectura 2 - El comando `docker run`
+# Lectura 02 - El comando `docker run`
 
 ## Prerequisitos
 
