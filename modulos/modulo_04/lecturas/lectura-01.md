@@ -1,6 +1,6 @@
 ![Banner del proyecto](/modulos/assets/Banner.png)
 
-# Lectura 13 - Distribución y versionamiento de imágenes con Docker
+# Lectura 01 - Distribución y versionamiento de imágenes con Docker
 
 ## Prerrequisitos
 
