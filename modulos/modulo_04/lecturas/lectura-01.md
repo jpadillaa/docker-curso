@@ -396,11 +396,11 @@ $ docker manifest inspect jpadillaa/mi-api:1.0.0
 
 ### Confusión entre nombre local y nombre remoto
 
-**Síntoma.** `docker push mi-api:1.0.0` falla con un error que indica que el repositorio no existe o que se requiere autenticación.
+**Síntoma.** `docker push mi-api:1.0.0` falla con un mensaje que indica que el repositorio no existe o que se requiere autenticación.
 
-**Causa.** El nombre `mi-api` no incluye un namespace válido del registry. Docker intenta publicar en `docker.io/library/mi-api`, que corresponde al espacio de imágenes oficiales y no está disponible para usuarios individuales.
+**Causa.** El nombre `mi-api:1.0.0` corresponde a una referencia local y no incluye un namespace válido del registry. En Docker Hub, esto puede llevar a que Docker intente resolver la publicación en `docker.io/library/mi-api`, que no corresponde al espacio de trabajo de un usuario individual.
 
-**Solución.** Etiquete la imagen con su namespace antes de publicar.
+**Solución.** Etiquete la imagen con el nombre remoto completo antes de publicarla.
 
 ```bash
 $ docker tag mi-api:1.0.0 jpadillaa/mi-api:1.0.0
@@ -409,27 +409,27 @@ $ docker push jpadillaa/mi-api:1.0.0
 
 ### Error por no autenticarse
 
-**Síntoma.** `denied: requested access to the resource is denied`
+**Síntoma.** Aparece un mensaje como `denied: requested access to the resource is denied`.
 
-**Causa.** No se ejecutó `docker login` antes de `docker push`, o la sesión expiró.
+**Causa.** No se ejecutó `docker login` antes de `docker push`, la sesión expiró o las credenciales activas no corresponden a un usuario con permisos sobre el repositorio de destino.
 
-**Solución.** Ejecute `docker login` e intente nuevamente.
+**Solución.** Ejecute `docker login`, confirme que la autenticación fue exitosa e intente nuevamente la publicación.
 
 ### Repositorio inexistente o sin permisos
 
-**Síntoma.** `repository does not exist or may require 'docker login'`
+**Síntoma.** Se presenta un error como `repository does not exist or may require 'docker login'`.
 
-**Causa.** El repositorio no existe en el registry, el nombre está mal escrito o el usuario autenticado no tiene permisos de escritura.
+**Causa.** El repositorio no existe en el registry, el nombre remoto fue escrito incorrectamente o el usuario autenticado no tiene permisos de escritura sobre ese namespace.
 
-**Solución.** Verifique el nombre del repositorio. En Docker Hub, los repositorios se crean automáticamente con el primer `push` si el namespace es correcto. En registries privados, puede ser necesario crear el repositorio previamente.
+**Solución.** Verifique el nombre completo del repositorio, confirme la cuenta con la que inició sesión y revise el comportamiento del registry utilizado. En Docker Hub, un repositorio bajo un namespace válido suele quedar disponible con el primer `push`. En registries privados, puede ser necesario crearlo previamente o solicitar permisos explícitos.
 
 ### Sobrescritura accidental de tags
 
-**Síntoma.** Un colega reporta que la imagen `1.0.0` se comporta diferente a la que descargó la semana anterior.
+**Síntoma.** Un integrante del equipo reporta que la imagen `1.0.0` se comporta de forma distinta a la que descargó la semana anterior.
 
-**Causa.** Alguien publicó una imagen nueva con el mismo tag `1.0.0`, sobreescribiendo el contenido previo.
+**Causa.** Se publicó una nueva imagen utilizando el mismo tag `1.0.0`, de modo que la referencia visible se mantuvo, pero el contenido asociado cambió.
 
-**Solución.** Establezca como política del equipo que los tags semánticos (`1.0.0`, `2.1.3`) son inmutables una vez publicados. Si se necesita corregir un error, publique una nueva versión (`1.0.1`). Para verificaciones críticas, compare digests.
+**Solución.** Establezca como política del equipo que los tags semánticos, por ejemplo `1.0.0` o `2.1.3`, no se reutilizan después de ser publicados. Si se requiere una corrección, publique una nueva versión, por ejemplo `1.0.1`. Cuando la verificación de integridad sea importante, compare los digests de las imágenes involucradas.
 
 ### Asumir que `latest` es la versión correcta
 
