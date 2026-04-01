@@ -394,7 +394,7 @@ $ docker manifest inspect jpadillaa/mi-api:1.0.0
 
 ## Errores comunes y troubleshooting
 
-### Confusión entre nombre local y nombre remoto
+### Problema 1: Confusión entre nombre local y nombre remoto
 
 **Síntoma.** `docker push mi-api:1.0.0` falla con un mensaje que indica que el repositorio no existe o que se requiere autenticación.
 
@@ -407,7 +407,7 @@ $ docker tag mi-api:1.0.0 jpadillaa/mi-api:1.0.0
 $ docker push jpadillaa/mi-api:1.0.0
 ```
 
-### Error por no autenticarse
+### Problema 2: Error por no autenticarse
 
 **Síntoma.** Aparece un mensaje como `denied: requested access to the resource is denied`.
 
@@ -415,7 +415,7 @@ $ docker push jpadillaa/mi-api:1.0.0
 
 **Solución.** Ejecute `docker login`, confirme que la autenticación fue exitosa e intente nuevamente la publicación.
 
-### Repositorio inexistente o sin permisos
+### Problema 3: Repositorio inexistente o sin permisos
 
 **Síntoma.** Se presenta un error como `repository does not exist or may require 'docker login'`.
 
@@ -423,7 +423,7 @@ $ docker push jpadillaa/mi-api:1.0.0
 
 **Solución.** Verifique el nombre completo del repositorio, confirme la cuenta con la que inició sesión y revise el comportamiento del registry utilizado. En Docker Hub, un repositorio bajo un namespace válido suele quedar disponible con el primer `push`. En registries privados, puede ser necesario crearlo previamente o solicitar permisos explícitos.
 
-### Sobrescritura accidental de tags
+### Problema 4: Sobrescritura accidental de tags
 
 **Síntoma.** Un integrante del equipo reporta que la imagen `1.0.0` se comporta de forma distinta a la que descargó la semana anterior.
 
@@ -431,7 +431,7 @@ $ docker push jpadillaa/mi-api:1.0.0
 
 **Solución.** Establezca como política del equipo que los tags semánticos, por ejemplo `1.0.0` o `2.1.3`, no se reutilizan después de ser publicados. Si se requiere una corrección, publique una nueva versión, por ejemplo `1.0.1`. Cuando la verificación de integridad sea importante, compare los digests de las imágenes involucradas.
 
-### Asumir que `latest` es la versión correcta
+### Problema 5: Asumir que `latest` es la versión correcta
 
 **Síntoma.** Un despliegue usa `latest` y la aplicación se comporta de forma inesperada.
 
@@ -439,7 +439,7 @@ $ docker push jpadillaa/mi-api:1.0.0
 
 **Solución.** Use tags de versión explícitos en cualquier ambiente que no sea exploración local.
 
-### Confusión entre tag y digest
+### Problema 6: Confusión entre tag y digest
 
 **Síntoma.** Un desarrollador asume que dos imágenes son idénticas porque tienen el mismo tag en diferentes máquinas, pero se comportan diferente.
 
@@ -447,7 +447,7 @@ $ docker push jpadillaa/mi-api:1.0.0
 
 **Solución.** Compare los digests de ambas imágenes con `docker image inspect`. Si difieren, las imágenes son diferentes a pesar del tag compartido.
 
-### No saber qué versión se desplegó
+### Problema 7: No saber qué versión se desplegó
 
 **Síntoma.** Un incidente en producción requiere identificar qué versión exacta de la imagen se está ejecutando, pero solo se registró el tag `latest`.
 
