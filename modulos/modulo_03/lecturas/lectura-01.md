@@ -715,7 +715,7 @@ services:
 
 ## Errores comunes y troubleshooting
 
-### 1. Puerto del host ya en uso
+### Problema 1: Puerto del host ya en uso
 
 **Síntoma**
 Al ejecutar `docker compose up`, aparece un error similar a:
@@ -736,7 +736,7 @@ ports:
   - "9090:8080"   # Usar 9090 en el host
 ```
 
-### 2. La aplicación no logra conectarse a la base de datos
+### Problema 2: La aplicación no logra conectarse a la base de datos
 
 **Síntoma**  
 La aplicación web presenta errores de conexión rechazada al intentar acceder a la base de datos.
@@ -761,7 +761,7 @@ La aplicación web presenta errores de conexión rechazada al intentar acceder a
    **Acción recomendada**  
    Revise cuidadosamente valores como usuario, contraseña, nombre de base de datos, hostname y puerto, y confirme que exista coherencia entre ambos servicios.
 
-### 3. Uso incorrecto de `localhost`
+### Problema 3: Uso incorrecto de `localhost`
 
 **Síntoma**  
 La aplicación genera un error como `Connection refused` al intentar conectarse a `localhost:5432`.
@@ -775,7 +775,7 @@ Sustituya `localhost` por el nombre del servicio definido en `compose.yml`, por 
 > [!TIP]
 > En la comunicación entre servicios de Compose debe utilizarse el nombre del servicio y el puerto interno del contenedor.
 
-### 4. Pérdida de datos al recrear contenedores
+### Problema 4: Pérdida de datos al recrear contenedores
 
 **Síntoma**  
 Después de ejecutar `docker compose down` y posteriormente `docker compose up`, los datos de la base de datos ya no están disponibles.
@@ -801,7 +801,7 @@ services:
 > [!WARNING]
 > Si se utiliza docker compose down -v, el volumen persistente también será eliminado. En ese escenario, los datos no se conservarán.
 
-### 5. Error de sintaxis o indentación en YAML
+### Problema 5: Error de sintaxis o indentación en YAML
 
 **Síntoma**
 
@@ -825,7 +825,7 @@ $ docker compose config
 
 Este comando parsea y muestra la configuración resultante. Si hay errores de sintaxis, los reporta.
 
-### 6. Servicio que depende de otro aún no preparado
+### Problema 6: Servicio que depende de otro aún no preparado
 
 **Síntoma**
 
