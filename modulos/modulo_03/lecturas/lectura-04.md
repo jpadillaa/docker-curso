@@ -556,7 +556,9 @@ $ curl http://localhost/api/items
 [{"id":1,"nombre":"item","creado":"2026-03-26 ..."}]
 ```
 
-### Escenario de fallo 1: puerto del host ocupado
+## Errores comunes y troubleshooting
+
+### Problema 1: puerto del host ocupado
 
 Suponga que otro proceso ya ocupa el puerto 80 en el host.
 
@@ -583,7 +585,7 @@ ports:
   - "8080:80"    # usar puerto 8080 en el host
 ```
 
-### Escenario de fallo 2: variable de entorno incorrecta
+### Problema 2: variable de entorno incorrecta
 
 Suponga que `.env` contiene una contraseña que no coincide con la que PostgreSQL espera, o que `DATABASE_URL` referencia `localhost` en lugar de `db`.
 
@@ -617,7 +619,7 @@ El log revela que la cadena de conexión usa `localhost` en lugar de `db`.
 $ docker compose up -d
 ```
 
-### Escenario de fallo 3: contenedor en bucle de reinicio
+### Problema 3: contenedor en bucle de reinicio
 
 Suponga que `api` tiene `restart: unless-stopped` y falla al iniciar. El contenedor se reinicia repetidamente.
 
@@ -645,7 +647,7 @@ La aplicación espera la variable `DATABASE_URL`, que no está definida.
 $ docker compose up -d api
 ```
 
-### Escenario de fallo 4: volumen en ruta incorrecta
+### Problema 4: volumen en ruta incorrecta
 
 Suponga que el volumen de PostgreSQL se monta en `/var/lib/postgres/data` (sin `ql`):
 
