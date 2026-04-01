@@ -1,6 +1,6 @@
 ![Banner del proyecto](/modulos/assets/Banner.png)
 
-# Lectura 12 - Operación y troubleshooting con Docker Compose
+# Lectura 04 - Operación y troubleshooting con Docker Compose
 
 ## Prerrequisitos
 
