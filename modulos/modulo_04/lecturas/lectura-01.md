@@ -15,7 +15,7 @@ Esta lectura asume que el estudiante:
 
 ## Introducción
 
-Hasta este punto del curso, las imágenes Docker se han construido y utilizado dentro de la misma máquina. El flujo habitual ha consistido en escribir un `Dockerfile`, ejecutar `docker build`, verificar con `docker run` y referenciar la imagen en un archivo `compose.yml` local. Este modelo es suficiente mientras la imagen solo la necesite una persona en una sola máquina.
+Hasta este punto del curso, las imágenes Docker se han construido y utilizado dentro de la misma máquina. El flujo habitual ha consistido en escribir un `Dockerfile`, ejecutar `docker build`, verificar con `docker run` y referenciar la imagen en un archivo `docker-compose.yml` local. Este modelo es suficiente mientras la imagen solo la necesite una persona en una sola máquina.
 
 En la práctica, una imagen necesita **moverse** hacia otro desarrollador del equipo, hacia un servidor de pruebas, hacia un pipeline de integración continua o hacia un entorno de producción. Para que ese movimiento sea controlado, reproducible y trazable, se requiere un mecanismo formal de distribución.
 
