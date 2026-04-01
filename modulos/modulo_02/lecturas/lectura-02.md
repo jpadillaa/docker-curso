@@ -653,7 +653,7 @@ docker rmi nombre_imagen:tag
 docker volume rm nombre_volumen
 ```
 
-## Troubleshooting
+## Errores comunes y troubleshooting
 
 ### Problema 1: Puerto ya en uso
 
