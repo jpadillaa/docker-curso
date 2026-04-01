@@ -1,6 +1,6 @@
 ![Banner del proyecto](/modulos/assets/Banner.png)
 
-# Lectura 2 - Comandos Básicos de Docker
+# Lectura 01 - Comandos Básicos de Docker
 
 ## Introducción
 
