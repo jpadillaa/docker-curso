@@ -2,7 +2,7 @@
 
 # Lectura 2 - Virtualización
 
-Para comprender las tecnologías de contenedorización, conviene iniciar por los fundamentos de la **virtualización**, que surgió como respuesta a la **subutilización de recursos** en servidores físicos. En muchos entornos, una aplicación rara vez aprovecha por completo la capacidad de procesamiento, memoria y almacenamiento disponibles, lo que genera ineficiencia y costos innecesarios.
+Para comprender las tecnologías de contenerización, conviene iniciar por los fundamentos de la **virtualización**, que surgió como respuesta a la **subutilización de recursos** en servidores físicos. En muchos entornos, una aplicación rara vez aprovecha por completo la capacidad de procesamiento, memoria y almacenamiento disponibles, lo que genera ineficiencia y costos innecesarios.
 
 ## Conceptos básicos
 
@@ -132,9 +132,9 @@ Las máquinas virtuales siguen siendo una opción adecuada cuando se requiere al
 - Compatibilidad con **software legado**
 - Necesidad de entornos completos, estables y fácilmente replicables para pruebas, laboratorios o infraestructura empresarial
 
-## Puente hacia la contenedorización
+## Puente hacia la contenerización
 
-Este costo de empaquetar un **sistema operativo completo por carga** es una de las motivaciones que explica la aparición de enfoques más livianos, como la **contenedorización**.
+Este costo de empaquetar un **sistema operativo completo por carga** es una de las motivaciones que explica la aparición de enfoques más livianos, como la **contenerización**.
 
 La diferencia estructural central es la siguiente.
 
