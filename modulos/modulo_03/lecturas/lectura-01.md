@@ -228,7 +228,7 @@ volumes:
 
 #### Bloque `services`
 
-Define los componentes de la aplicación. Cada clave bajo `services` es un nombre de servicio.
+Define los componentes de la aplicación. Cada clave bajo `services` es un nombre de servicio. A continuación se describen las claves de configuración más frecuentes dentro de la definición de un servicio.
 
 | Clave | Descripción |
 |-------|-------------|
